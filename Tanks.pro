@@ -3,6 +3,8 @@ QT += widgets
 TEMPLATE = app
 TARGET = Tanks
 INCLUDEPATH += .
+DESTDIR = bin		#Destination du fichier TARGET "Tanks"
+OBJECTS_DIR = bin	#Destination des fichiers objet
 
 SOURCES += \
     src/main.cpp \

@@ -6,4 +6,4 @@ Construction :
 
 		- Pour générer un Makefile à partir du projet : 			$ qmake Tanks.pro
 		- Pour compiler le projet à l'aide du Makefile :			$ make
-		- Pour executer l'application :						$ ./Tanks
+		- Pour executer l'application :						$ ./bin/Tanks
