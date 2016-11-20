@@ -5,6 +5,7 @@ TARGET = Tanks
 INCLUDEPATH += .
 DESTDIR = bin		#Destination du fichier TARGET "Tanks"
 OBJECTS_DIR = bin	#Destination des fichiers objet
+RCC_DIR = bin		#Destination des fichiers qrc
 
 SOURCES += \
     src/main.cpp \
@@ -26,3 +27,6 @@ HEADERS += \
     head/Canon.h \
     head/Obstacle.h \
     head/Obus.h
+
+RESOURCES += \
+    img/tank1.qrc

@@ -1,8 +1,10 @@
 #ifndef OBUS_H
 #define OBUS_H
 
+#include <QGraphicsEllipseItem>
+#include <QObject>
 
-class Obus
+class Obus : public QObject, public QGraphicsEllipseItem
 {
     private:
         int type;

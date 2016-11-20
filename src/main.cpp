@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 
     Fenetre* F = new Fenetre();
 
-
+    F->getVue()->show();
 
     return app.exec();
 }

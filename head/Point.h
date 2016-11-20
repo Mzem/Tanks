@@ -4,8 +4,15 @@
 
 class Point
 {
-public:
-    Point();
+    private:
+        int x;
+        int y;
+
+    public:
+        Point();
+        Point(int,int);
+        int getX();
+        int getY();
 };
 
 #endif // POINT_H

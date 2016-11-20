@@ -1,28 +1,37 @@
 #include "../head/Fenetre.h"
 
-//Dimensions de la fenetre
-#define X 800
-#define Y 600
+//Dimensions initiales de la fenetre
+#define X 600
+#define Y 400
 
 Fenetre::Fenetre()
 {
-    // Creation d'une scene (fenetre)
-    QGraphicsScene * scene = new QGraphicsScene(qreal(0),qreal(0),qreal(X),qreal(Y));
+    Tank* T1 = new Tank(X,Y);
 
-    // Creation des tanks
-    Tank* T1 = new Tank();
-    T1->setRect(0,0,100,100); // modif taille rectangle du tank
+    QPixmap imageTank(":/tank1.png");   //Utilisation d'un fichier .qrc
+    imageTank = imageTank.scaled(X/7,Y/7, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    T1->setPixmap(imageTank);
 
-    // Ajout des tanks à la scene
-    scene->addItem(T1);
+    this->addItem(T1);
 
-    // Rendre le Tank "focusable" pour qu'il puisse bouger
     T1->setFlag(QGraphicsItem::ItemIsFocusable);
-    T1->setFocus();
+    T1->setFocus(); //Rendre le Tank "focusable" pour qu'il puisse bouger
 
     // Creation d'une vue pour visualiser la fenetre
-    QGraphicsView* vue = new QGraphicsView(scene);
+    vue = new QGraphicsView(this);
+    vue->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    vue->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    vue->resize(X,Y);
+    vue->setBackgroundBrush(QBrush(Qt::darkRed, Qt::Dense4Pattern));
 
-    vue->show();
+}
 
+QGraphicsView* Fenetre::getVue()
+{
+    return vue;
+}
+
+void Fenetre::resizeEvent(QResizeEvent * event)
+{
+    cout << "HERE" << endl;
 }
