@@ -1,14 +1,19 @@
 #include <QApplication>
-#include "../head/Fenetre.h"
+#include "../head/Jeu.h"
+#include "../head/Menu.h"
+
+Jeu* J;
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+    //Menu M;
+    //M.show();
 
-    Fenetre* F = new Fenetre();
+    J = new Jeu(2); //2 à modifier pour gérer un nombre personnalisé de joueurs
 
-    F->getVue()->show();
+    J->show();
 
     return app.exec();
 }

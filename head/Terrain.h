@@ -4,8 +4,8 @@
 
 class Terrain
 {
-public:
-    Terrain();
+    public:
+        Terrain();
 };
 
 #endif // TERRAIN_H

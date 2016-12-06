@@ -13,6 +13,8 @@ class Point
         Point(int,int);
         int getX();
         int getY();
+        void setX(int);
+        void setY(int);
 };
 
 #endif // POINT_H

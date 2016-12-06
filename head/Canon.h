@@ -10,6 +10,10 @@ class Canon
 
     public:
         Canon();
+        int getAngleH();
+        int getAngleV();
+        void rotationH(int);
+        void rotationV(int);
 };
 
 #endif // CANON_H

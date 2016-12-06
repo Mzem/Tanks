@@ -1,34 +1,41 @@
 #ifndef TANK_H
 #define TANK_H
 
+#include <iostream>
+#include <QObject>
+#include <QGraphicsScene>
+#include <QGraphicsItem>
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
+#include <QSize>
+#include <QGraphicsWidget>
 #include "../head/Point.h"
+#include "../head/Obus.h"
 
-#include <iostream>
 using namespace std;
 
+//Dimensions initiales de la fenetre, definies ici car le tank en a besoin (et jeu inclut tank)
+extern int X;
+extern int Y;
+
 enum DIRECTION {HAUT,BAS,DROITE,GAUCHE};
+
 
 class Tank: public QGraphicsPixmapItem
 {
     private:
-        //Pas la peine de stocker la position du tank, on l'a grace a la methode getPosition()
-        Point champ;            //champ de la fenetre dans lequel le tank peut se deplacer
         DIRECTION direction;
+        Obus O1;
+        Obus O2;
+        Obus O3;
 
-        int pointsDeVie;
-        int capaciteDepl;   //capacite de deplacement par tour, depend de la nature du terrain, vaut X/10
-                            //c'est un const normalement
-
-        //Canon canon;
-
-        //Un objet pour stocker les obus et leur nombre
 
     public:
-        Tank(int largeurFenetre, int hauteurFenetre);
-        void keyPressEvent(QKeyEvent * event);
-        Point getPosition();    //Retoune la position centrale du tank
+        Tank(int indiceJoueur, QGraphicsItem * parent=0);
+        Point getPosition();                    //Retoune la position en hautGauche du tank
+        void keyPressEvent(QKeyEvent* event);
+        void adapter(QSize nouvelleTaille, QSize ancienneTaille); //adapte le tank a la fenetre
+
 };
 
 #endif // TANK_H
