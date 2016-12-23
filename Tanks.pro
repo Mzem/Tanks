@@ -6,33 +6,48 @@ INCLUDEPATH += .
 DESTDIR = bin		#Destination du fichier TARGET "Tanks"
 OBJECTS_DIR = bin	#Destination des fichiers objet
 RCC_DIR = bin		#Destination des fichiers qrc
+MOC_DIR = bin
+UI_DIR = BIN
 
 
 SOURCES += \
     src/main.cpp \
-    src/Tank.cpp \
+    src/ButtonWidget.cpp \
+    src/Menu.cpp \
+    src/MenuJeu.cpp \
     src/Jeu.cpp \
-    src/Terrain.cpp \
     src/Point.cpp \
     src/Segment.cpp \
+    src/Terrain.cpp \
+    src/Tank.cpp \
     src/Canon.cpp \
-    src/Obstacle.cpp \
     src/Obus.cpp \
-	src/Menu.cpp
+    src/Obstacle.cpp \
+
 
 HEADERS += \
-    head/Tank.h \
+    head/Definitions.h \
+    head/ButtonWidget.h \
+    head/Menu.h \
+    head/MenuJeu.h \
     head/Jeu.h \
-    head/Terrain.h \
     head/Point.h \
     head/Segment.h \
+    head/Terrain.h \
+    head/Tank.h \
     head/Canon.h \
-    head/Obstacle.h \
     head/Obus.h \
-	head/Menu.h
+    head/Obstacle.h \
+
 
 RESOURCES += \
+    img/logo.qrc \
+    img/bg.qrc \
     img/tank1.qrc \
     img/canon1.qrc \
-    img/bg.qrc \
-    img/logo.qrc
+    img/rocher.qrc \
+    img/arbre.qrc \
+    img/obus1.qrc \
+    img/obus2.qrc \
+    img/obus3.qrc
+    

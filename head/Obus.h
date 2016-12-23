@@ -1,21 +1,25 @@
 #ifndef OBUS_H
 #define OBUS_H
 
-#include <QGraphicsEllipseItem>
-#include <QObject>
+#include <QGraphicsItem>
+#include <QTimer>
+#include "../head/Definitions.h"
 #include "../head/Point.h"
-#include "../head/Segment.h"
 
-class Obus : public QObject, public QGraphicsEllipseItem
+class Obus : public QObject, public QGraphicsPixmapItem
 {
-    private:
-        int type;
-        int rayon;
-        int force;
+    Q_OBJECT
 
     public:
-        Obus(int type); //en fonction du type, met les valeurs de rayon et force
-        Point tirer(int angle);
+        Obus(int type, int angleH, int angleV, QGraphicsItem * parent=0);
+
+    public slots:
+        void bouger();
+
+    private:
+        int type;
+        int force;
+        int rayon;
 
 };
 

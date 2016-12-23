@@ -1,45 +1,48 @@
 #include "../head/Menu.h"
 
+Jeu* J;
+
 Menu::Menu() : QWidget()
 {
-    setFixedSize(X,Y);
-    setStyleSheet("background-image: url(:/bg.jpg)");
+    setMinimumSize(X,Y);
+    setStyleSheet("background-image: url(:/bg.jpg); ");
+    QGridLayout *layout = new QGridLayout;
 
-    int largeur = X/2;
-    int hauteur = Y/20;
-
+    //Ajout du logo
     QLabel* logo = new QLabel(this);
     logo->setPixmap(QPixmap(":/logo.png"));
     logo->setAlignment(Qt::AlignHCenter);
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(logo);
+    layout->addWidget(logo,0,1);
+
+    //Ajout des boutons
+    QStringList texts;
+    texts.append("1 JOUEUR");
+    texts.append("2 JOUEURS");
+    texts.append("3 JOUEURS");
+    texts.append("4 JOUEURS");
+    boutons = new ButtonWidget(texts, QColor(Qt::white), this);
+    layout->addWidget(boutons,1,1);
+
     setLayout(layout);
 
-    QPushButton* b1 = new QPushButton("1 JOUEUR", this);
-    QPushButton* b2 = new QPushButton("2 JOUEURS", this);
-    QPushButton* b3 = new QPushButton("3 JOUEURS", this);
-    QPushButton* b4 = new QPushButton("4 JOUEURS", this);
-    QPalette p;
-    p.setColor(QPalette::ButtonText, QColor(Qt::white));
+    //Utilisation de la classe ButtonWidget pour permettre de passer le texte du bouton en parametre au slot
+    QObject::connect(boutons, SIGNAL(clicked(QString)), this, SLOT(lancerJeu(QString)));
 
-    b1->setCursor(Qt::PointingHandCursor);
-    b1->setGeometry(X/2-largeur/2,Y/2-hauteur,largeur,hauteur);
-    b1->setFont(QFont("Calibri", X/57));
-    b1->setPalette(p);
+}
 
-    b2->setCursor(Qt::PointingHandCursor);
-    b2->setGeometry(X/2-largeur/2,Y/2+hauteur,largeur,hauteur);
-    b2->setFont(QFont("Calibri", X/57));
-    b2->setPalette(p);
+void Menu::lancerJeu(QString nbJoueurs)
+{
+    int nb = nbJoueurs[0].digitValue();
 
-    b3->setCursor(Qt::PointingHandCursor);
-    b3->setGeometry(X/2-largeur/2,Y/2+3*hauteur,largeur,hauteur);
-    b3->setFont(QFont("Calibri", X/57));
-    b3->setPalette(p);
+    J = new Jeu(nb);
 
-    b4->setCursor(Qt::PointingHandCursor);
-    b4->setGeometry(X/2-largeur/2,Y/2+5*hauteur,largeur,hauteur);
-    b4->setFont(QFont("Calibri", X/57));
-    b4->setPalette(p);
+    hide();
+    J->show();
+}
 
+void Menu::paintEvent(QPaintEvent *pe){
+  QStyleOption o;
+  o.initFrom(this);
+  QPainter p(this);
+  style()->drawPrimitive(QStyle::PE_Widget, &o, &p, this);
 }

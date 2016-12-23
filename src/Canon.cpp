@@ -1,18 +1,21 @@
 #include "../head/Canon.h"
 
-Canon::Canon()
+Canon::Canon(DIRECTION dir, QGraphicsItem *parent) : QGraphicsPixmapItem(parent)
 {
-    angleH = 0;
     angleV = 0;
+    switch(dir){
+        case DROITE :   angleH = 180;   break;
+        case GAUCHE :   angleH = 0;     break;
+        case HAUT :     angleH = 90;    break;
+        case BAS :      angleH = 270;   break;
+   }
 }
 
-int Canon::getAngleH()
-{
+int Canon::getAngleH(){
     return angleH;
 }
 
-int Canon::getAngleV()
-{
+int Canon::getAngleV(){
     return angleV;
 }
 

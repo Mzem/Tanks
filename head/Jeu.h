@@ -1,30 +1,27 @@
 #ifndef JEU_H
 #define JEU_H
 
-#include <iostream>
-#include <QApplication>
-#include <QWidget>
-#include <QGraphicsItem>
-#include <QGraphicsScene>
+//Classe principale qui crée le terrain et y ajoute les elements du jeu
+
 #include <QGraphicsView>
 #include <QResizeEvent>
+#include <QGraphicsProxyWidget>
+#include "../head/MenuJeu.h"
 #include "../head/Tank.h"
-
-using namespace std;
-
 
 class Jeu : public QGraphicsView
 {
-    private:
-        QGraphicsScene* scene;
-        int nombreJoueurs;
-        Tank* joueurs[2];   //Tab qui stocke les joueurs, à faire evoluer en ptr (tab dynamique)
+    Q_OBJECT
 
     public:
         Jeu(int nombreJoueurs, QWidget* parent=0);
         void resizeEvent(QResizeEvent* event);
+        Terrain* getTerrain();
 
-
+    private:
+        int nombreJoueurs;
+        Terrain* terrain;
+        Tank** tanks;
 };
 
 #endif // JEU_H

@@ -1,13 +1,8 @@
 #ifndef POINT_H
 #define POINT_H
 
-
 class Point
 {
-    private:
-        int x;
-        int y;
-
     public:
         Point();
         Point(int,int);
@@ -15,6 +10,10 @@ class Point
         int getY();
         void setX(int);
         void setY(int);
+
+    private:
+        int x;
+        int y;
 };
 
 #endif // POINT_H

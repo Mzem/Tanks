@@ -1,23 +1,28 @@
 #ifndef DEF_MENU
 #define DEF_MENU
 
-#include <QApplication>
-#include <QWidget>
+//Classe qui definit le menu d'acceuil et qui lance le jeu en fonction du bouton cliqué
+
 #include <QLabel>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include "../head/Tank.h"
+#include <QGridLayout>
+#include <QPaintEvent>
+#include <QStyleOption>
+#include "../head/ButtonWidget.h"
+#include "../head/Jeu.h"
 
 class Menu : public QWidget
 {
+    Q_OBJECT
+
     public:
-    Menu();
+        Menu();
+
+    public slots:
+        void lancerJeu(QString nbJoueurs);
 
     private:
-    QPushButton *b1;
-    QPushButton *b2;
-    QPushButton *b3;
-    QPushButton *b4;
+        ButtonWidget *boutons;
+        void paintEvent(QPaintEvent *pe);   //Pour pouvoir ajuster l'image de fond
 };
 
 #endif
