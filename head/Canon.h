@@ -11,14 +11,15 @@ class Canon : public QGraphicsPixmapItem
 {
     public:
         Canon(DIRECTION, QGraphicsItem *parent);
-        int getAngleH();
-        int getAngleV();
-        void rotationH(int);
-        void rotationV(int);
+        double getAngleH();
+        double getAngleV();
+        void setAngleH(double);
+        void setAngleV(double);
+        void keyPressEvent(QKeyEvent* event);
 
     private:
-        int angleH;    //0 - 360
-        int angleV;    //0 - 90
+        double angleH;    //0 - 360
+        double angleV;    //0 - 90
 };
 
 #endif // CANON_H

@@ -34,10 +34,17 @@ void Menu::lancerJeu(QString nbJoueurs)
 {
     int nb = nbJoueurs[0].digitValue();
 
-    J = new Jeu(nb);
+    J = new Jeu(nb,this);
 
     hide();
     J->show();
+}
+
+void Menu::quitterJeu()
+{
+    J->hide();
+    show();
+    //delete J;
 }
 
 void Menu::paintEvent(QPaintEvent *pe){

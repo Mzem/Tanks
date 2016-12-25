@@ -6,6 +6,10 @@
 #include <QGraphicsView>
 #include <QResizeEvent>
 #include <QGraphicsProxyWidget>
+#include <QLabel>
+#include <QGroupBox>
+#include <QRadioButton>
+#include <QLCDNumber>
 #include "../head/MenuJeu.h"
 #include "../head/Tank.h"
 
@@ -15,12 +19,17 @@ class Jeu : public QGraphicsView
 
     public:
         Jeu(int nombreJoueurs, QWidget* parent=0);
-        void resizeEvent(QResizeEvent* event);
+        void tourDeJeu(int);
         Terrain* getTerrain();
+        void resizeEvent(QResizeEvent* event);
+
+    public slots:
+        void changerFocus(QString);
 
     private:
         int nombreJoueurs;
         Terrain* terrain;
+        MenuJeu* menu;
         Tank** tanks;
 };
 

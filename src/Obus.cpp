@@ -3,28 +3,35 @@
 
 extern Jeu* J;
 
-Obus::Obus(int t, int aH, int aV, QGraphicsItem *parent) : QObject(), QGraphicsPixmapItem(parent), type(t)
+Obus::Obus(int t, double aH, double aV, QGraphicsItem *parent) : QObject(), QGraphicsPixmapItem(parent), type(t)
 {
-    if (type == 1){
-        rayon = 1;
-        force = 2;
-        setPixmap(QPixmap(":/obus1.png"));
-    }
-    else if (type == 2){
-        rayon = 5;
-        force = 5;
-        setPixmap(QPixmap(":/obus2.png"));
-    }
-    else if (type == 3){
-        rayon = 9;
-        force = 10;
-        setPixmap(QPixmap(":/obus3.png"));
-    }
+    angleH = aH;
+    angleV = aV;
 
+    QPixmap* imageObus;
+    switch (type) {
+    case 1: rayon = 1;  force = 2;
+            imageObus = new QPixmap(":/obus1.png");
+            *imageObus = imageObus->scaled(Y/16,Y/16, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setPixmap(*imageObus);
+            break;
+    case 2: rayon = 5;  force = 5;
+            imageObus = new QPixmap(":/obus2.png");
+            *imageObus = imageObus->scaled(Y/16,Y/16, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setPixmap(*imageObus);
+            break;
+    case 3: rayon = 9;  force = 10;
+            imageObus = new QPixmap(":/obus3.png");
+            *imageObus = imageObus->scaled(Y/16,Y/16, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setPixmap(*imageObus);
+            break;
+    }
+    setRotation(rotation()-aH);
+
+    //Mouvement de l'obus
     QTimer* timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),this,SLOT(bouger()));
-
-    timer->start(50);
+    timer->start(30);
 
 }
 
@@ -52,10 +59,12 @@ void Obus::bouger(){
         }
     }
     */
-    //Continuer à avancer tq pas d'impact
-    setPos(x()-10,y());
+    //Continuer à avancer tq pas d'impact (selon l'angleH et l'angleV)
+    setPos(x()+uniteDeplacement*cos(angleH*M_PI/180.0),y()-uniteDeplacement*sin(angleH*M_PI/180.0));
+
+
     //Detruire l'obus s'il sort du terrain
-    if (pos().x() <= 0 || pos().x() >= Y){
+    if (pos().x() < 0 || pos().x() > Y){
         J->getTerrain()->removeItem(this);
         delete this;
     }

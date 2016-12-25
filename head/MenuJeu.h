@@ -9,10 +9,11 @@ class MenuJeu : public QWidget
     Q_OBJECT
 
     public:
-        MenuJeu();
+        MenuJeu(QWidget* fenetre);
+        QGridLayout* getLayout();
 
-    public slots:
-        void quitter();
+    private:
+        QGridLayout* layout;
 };
 
 #endif // MENUJEU_H

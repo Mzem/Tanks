@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QObject>
 #include <QWidget>
+#include <math.h>
 
 #include <iostream>
 using namespace std;
@@ -11,5 +12,8 @@ using namespace std;
 //Dimensions initiales de la fenetre
 #define X 800
 #define Y 600
+
+extern const int uniteDeplacement;
+extern const int tailleCase;
 
 #endif // DEFINITIONS_H

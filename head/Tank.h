@@ -9,10 +9,10 @@
 #include "../head/Canon.h"
 #include "../head/Obus.h"
 
-extern const int uniteDeplacement;
-
-class Tank : public QGraphicsPixmapItem
+class Tank : public QObject, public QGraphicsPixmapItem
 {
+    Q_OBJECT
+
     public:
         Tank(int numJoueur, Terrain*, QGraphicsItem * parent=0);
         //Position centrale du tank
@@ -21,13 +21,22 @@ class Tank : public QGraphicsPixmapItem
         void keyPressEvent(QKeyEvent* event);
         //Adapte le tank a la la taille de la fenetre
         void adapter(QSize nouvelleTaille, QSize ancienneTaille);
+        Canon* getCanon();
+        int getCapacite();
+        int getNbObus1();
+        int getNbObus2();
+        int getNbObus3();
+
+    signals:
+        void capaciteChanged(int);
 
     private:
         int numJoueur;
         //Pointe vers le terrain du jeu pour pouvoir le modifier
         Terrain* terrain;
         DIRECTION direction;
-        Canon canon;
+        Canon* canon;
+        int capaciteDeplacement;
         int nbObus1;
         int nbObus2;
         int nbObus3;

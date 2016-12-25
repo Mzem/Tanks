@@ -1,20 +1,19 @@
 #include "../head/MenuJeu.h"
 
-MenuJeu::MenuJeu() : QWidget()
+MenuJeu::MenuJeu(QWidget* fenetre) : QWidget()
 {
     setGeometry(0,0,X-Y,Y);
-    QGridLayout *layout = new QGridLayout;
+    layout = new QGridLayout;
 
     ButtonWidget* quit = new ButtonWidget(QStringList("QUITTER"),QColor(Qt::black));
 
-    layout->addWidget(quit,1,1);
+    layout->addWidget(quit,2,0);
 
     setLayout(layout);
 
-    QObject::connect(quit, SIGNAL(clicked(QString)), this, SLOT(quitter()));
+    QObject::connect(quit, SIGNAL(clicked(QString)), fenetre, SLOT(quitterJeu()));
 }
 
-void MenuJeu::quitter()
-{
-    hide();
+QGridLayout* MenuJeu::getLayout(){
+    return layout;
 }

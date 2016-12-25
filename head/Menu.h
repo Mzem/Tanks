@@ -19,6 +19,7 @@ class Menu : public QWidget
 
     public slots:
         void lancerJeu(QString nbJoueurs);
+        void quitterJeu();
 
     private:
         ButtonWidget *boutons;

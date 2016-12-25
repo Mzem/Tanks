@@ -7,8 +7,6 @@
 #include <QGraphicsItem>
 #include "../head/Obstacle.h"
 
-extern const int tailleCase;
-
 class Terrain : public QGraphicsScene
 {
     public:

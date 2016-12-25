@@ -11,7 +11,7 @@ class Obus : public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 
     public:
-        Obus(int type, int angleH, int angleV, QGraphicsItem * parent=0);
+        Obus(int type, double angleH, double angleV, QGraphicsItem * parent=0);
 
     public slots:
         void bouger();
@@ -20,6 +20,8 @@ class Obus : public QObject, public QGraphicsPixmapItem
         int type;
         int force;
         int rayon;
+        double angleH;
+        double angleV;
 
 };
 
