@@ -11,7 +11,7 @@ using namespace std;
 
 //Dimensions initiales de la fenetre
 #define X 800
-#define Y 600
+#define Y 608
 
 extern const int uniteDeplacement;
 extern const int tailleCase;

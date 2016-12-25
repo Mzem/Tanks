@@ -1,13 +1,13 @@
 #include "../head/Terrain.h"
 
 //Le terrain est un carré de coté Y, le tank est un carré de coté Y/8, une case a la taille d'un tank
-const int tailleCase = Y/8;
+const int tailleCase = Y/16;
 
 Terrain::Terrain(QWidget* parent) : QGraphicsScene(parent)
 {
     //Initialisation des cases à VIDE
-    for (int i = 0 ; i<8 ; i++)
-        for (int j = 0 ; j<8 ; j++)
+    for (int i = 0 ; i<16 ; i++)
+        for (int j = 0 ; j<16 ; j++)
             cases[i][j] = VIDE;
 }
 
@@ -20,10 +20,15 @@ void Terrain::updateCases(Point coordElement, ELEMENTS elem, int rayonTank)
         i = (coordElement.getX())/tailleCase;
         j = (coordElement.getY())/tailleCase;
         cases[i][j] = elem;
+        cases[i+1][j] = elem;
+        cases[i][j+1] = elem;
+        cases[i+1][j+1] = elem;
         j = (coordElement.getY()+2*rayonTank)/tailleCase;
         cases[i][j] = elem;
         i = (coordElement.getX()+2*rayonTank)/tailleCase;
         cases[i][j] = elem;
+        cases[i-1][j] = elem;
+        cases[i][j-1] = elem;
         j = (coordElement.getY())/tailleCase;
         cases[i][j] = elem;
     }
@@ -33,8 +38,8 @@ void Terrain::updateCases(Point coordElement, ELEMENTS elem, int rayonTank)
 
 void Terrain::vider(ELEMENTS elem)
 {
-    for (int i = 0 ; i<8 ; i++)
-        for (int j = 0 ; j<8 ; j++)
+    for (int i = 0 ; i<16 ; i++)
+        for (int j = 0 ; j<16 ; j++)
             if (cases[i][j] == elem)
                 cases[i][j] = VIDE;
 }
@@ -47,36 +52,36 @@ ELEMENTS Terrain::getCases(int i, int j)
 
 //[debug] Affichage des cases du terrain et leur contenu
 void Terrain::affiche(){
-    for (int i = 0 ; i<8 ; i++){
+    for (int i = 0 ; i<16 ; i++){
         addLine(i*tailleCase,0,i*tailleCase,Y);
         addLine(0,i*tailleCase,Y,i*tailleCase);
     }
     QGraphicsTextItem* txt;
-    for (int i = 0 ; i<8 ; i++)
-        for (int j = 0 ; j<8 ; j++){
+    for (int i = 0 ; i<16 ; i++)
+        for (int j = 0 ; j<16 ; j++){
             switch (cases[i][j]){
-                case VIDE : txt = addText("VIDE");
+                case VIDE : txt = addText("V");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
-                case TANK1 : txt = addText("TANK1");
+                case TANK1 : txt = addText("T1");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
-                case TANK2 : txt = addText("TANK2");
+                case TANK2 : txt = addText("T2");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
-                case TANK3 : txt = addText("TANK3");
+                case TANK3 : txt = addText("T3");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
-                case TANK4 : txt = addText("TANK4");
+                case TANK4 : txt = addText("T4");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
-                case ROCHER : txt = addText("ROCHER");
+                case ROCHER : txt = addText("R");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
-                case ARBRE : txt = addText("ARBRE");
+                case ARBRE : txt = addText("A");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
-                case CREVASSE : txt = addText("CREVASSE");
+                case CREVASSE : txt = addText("C");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
                 default : txt = addText("ERREUR");

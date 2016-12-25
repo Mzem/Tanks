@@ -21,11 +21,11 @@ Tank::Tank(int num, Terrain* t, QGraphicsItem *parent)
         case 1 :
             setRotation(rotation()+180);
             direction = DROITE;
-            setPos(Y/120,Y/2 - getRayon());
+            setPos(Y/120,Y/2 - (getRayon() - (getRayon()%5) ));
             break;
         case 2 :
             direction = GAUCHE;
-            setPos(Y - Y/120 - getRayon()*2,Y/2 - getRayon());
+            setPos(Y - Y/120 - (getRayon() - (getRayon()%5) )*2,Y/2 - (getRayon() - (getRayon()%5) ));
             break;
     }
 
@@ -51,7 +51,7 @@ void Tank::keyPressEvent(QKeyEvent *event)
         else if (direction == DROITE)
             setRotation(rotation()+180);
         else if
-        (getPosition().getX()-uniteDeplacement > 0
+        (getPosition().getX()-uniteDeplacement >= 0
         && (
             terrain->getCases((getPosition().getX()-uniteDeplacement)/tailleCase,getPosition().getY()/tailleCase) == VIDE
             || (numJoueur == 1 &&
@@ -90,7 +90,7 @@ void Tank::keyPressEvent(QKeyEvent *event)
             setRotation(rotation()-90);
         else if (direction == GAUCHE)
             setRotation(rotation()+180);
-        else if (getPosition().getX()+2*getRayon()+uniteDeplacement < Y
+        else if (getPosition().getX()+2*getRayon()+uniteDeplacement <= Y
         && (
             terrain->getCases((getPosition().getX()+2*getRayon()+uniteDeplacement)/tailleCase,getPosition().getY()/tailleCase) == VIDE
             || (numJoueur == 1 &&
@@ -129,7 +129,7 @@ void Tank::keyPressEvent(QKeyEvent *event)
             setRotation(rotation()+180);
         else if (direction == GAUCHE)
             setRotation(rotation()+90);
-        else if (getPosition().getY()-uniteDeplacement > 0
+        else if (getPosition().getY()-uniteDeplacement >= 0
         && (
             terrain->getCases(getPosition().getX()/tailleCase,(getPosition().getY()-uniteDeplacement)/tailleCase) == VIDE
             || (numJoueur == 1 &&
@@ -168,7 +168,7 @@ void Tank::keyPressEvent(QKeyEvent *event)
             setRotation(rotation()+90);
         else if (direction == GAUCHE)
             setRotation(rotation()-90);
-        else if (getPosition().getY()+2*getRayon()+uniteDeplacement < Y-2
+        else if (getPosition().getY()+2*getRayon()+uniteDeplacement <= Y
         && (
             terrain->getCases(getPosition().getX()/tailleCase,(getPosition().getY()+2*getRayon()+uniteDeplacement)/tailleCase) == VIDE
             || (numJoueur == 1 &&

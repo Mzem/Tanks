@@ -29,10 +29,11 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     }
 
     //Ajout des obstacles
-    for (int i = 0 ; i<8 ; i+=3)
-        for (int j = i%2 ; j<8 ; j+=3)
+    for (int i = 0 ; i<15 ; i+=4)
+        for (int j = 1 ; j<15 ; j+=4)
             if
-            (   terrain->getCases(i,j)==VIDE)
+				((terrain->getCases(i,j)==VIDE)&&(terrain->getCases(i+1,j-1)==VIDE)&&
+				(terrain->getCases(i,j-1)==VIDE)&&(terrain->getCases(i+1,j)==VIDE))
             /*  Tu peux utiliser ces condition pour générer un truc intelligent
             &&  (i==0 || terrain->getCases(i-1,j)==VIDE)
             &&  (i==7 || terrain->getCases(i+1,j)==VIDE)
@@ -43,9 +44,15 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
                 if(i==j){
                     terrain->addItem(new Obstacle(ARBRE,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
                     terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ARBRE);
+                    terrain->updateCases(Point((i+1)*tailleCase,Y-tailleCase-j*tailleCase),ARBRE);
+                    terrain->updateCases(Point((i+1)*tailleCase,Y-tailleCase-(j-1)*tailleCase),ARBRE);
+                    terrain->updateCases(Point(i*tailleCase,Y-tailleCase-(j-1)*tailleCase),ARBRE);
                 } else {
-                terrain->addItem(new Obstacle(ROCHER,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
-                terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ROCHER);
+					terrain->addItem(new Obstacle(ROCHER,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
+					terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ROCHER);
+                    terrain->updateCases(Point((i+1)*tailleCase,Y-tailleCase-j*tailleCase),ROCHER);
+                    terrain->updateCases(Point((i+1)*tailleCase,Y-tailleCase-(j-1)*tailleCase),ROCHER);
+                    terrain->updateCases(Point(i*tailleCase,Y-tailleCase-(j-1)*tailleCase),ROCHER);
                 }
             }
 
