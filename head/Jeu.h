@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QLCDNumber>
+#include <QMessageBox>
 #include "../head/MenuJeu.h"
 #include "../head/Tank.h"
 
@@ -27,6 +28,10 @@ class Jeu : public QGraphicsView
     public slots:
         void tourDeJeu();
         void wait();
+        void message();
+
+    signals:
+        void fini();
 
     private:
         int nombreJoueurs;

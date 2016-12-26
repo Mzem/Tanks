@@ -5,7 +5,7 @@ using namespace std;
 
 Canon::Canon(DIRECTION dir, QGraphicsItem *parent) : QGraphicsPixmapItem(parent)
 {
-    angleV = 0;
+    angleV = 1.0;
     angleH = 0;
     angleVAbsolu = 0;
     switch(dir){

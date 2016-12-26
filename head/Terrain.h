@@ -16,10 +16,11 @@ class Terrain : public QGraphicsScene
         void vider(ELEMENTS elem);
         void affiche();
         ELEMENTS getCases(int, int);
+        void impact(Point);
 
     private:
         //8 cases : le terrain est un carré de coté Y et le tank est un carré de coté Y/8
-        ELEMENTS cases[16][16];
+        ELEMENTS cases[8][8];
 };
 
 #endif // TERRAIN_H

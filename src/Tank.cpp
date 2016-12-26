@@ -24,7 +24,7 @@ Tank::Tank(int num, Terrain* t, QGraphicsItem *parent)
             *imageCanon = imageCanon->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             setRotation(rotation()+180);
             direction = DROITE;
-            setPos(Y/120,Y/2 - getRayon() - (getRayon()%5));
+            setPos(Y/120,Y/2 - (getRayon() - (getRayon()%5)));
             break;
         case 2 :
             imageTank = new QPixmap(":/tank2.png");
@@ -236,8 +236,6 @@ void Tank::keyPressEvent(QKeyEvent *event)
     }
 
     cout << getPosition().getX() << ", " << getPosition().getY() << endl;
-    terrain->affiche();
-
 
     //##################### Mouvement du canon
     canon->setTransformOriginPoint(getRayon()+getRayon()/4+10,getRayon()+1);
@@ -251,7 +249,17 @@ void Tank::keyPressEvent(QKeyEvent *event)
         canon->setAngleH(canon->getAngleH()+1);
         canon->setAngleHAbsolu(canon->getAngleHAbsolu()-1);
     }
-    cout << "AngleHAbsolu " << canon->getAngleHAbsolu() << endl;
+    if (event->key() == Qt::Key_Z && canon->getAngleVAbsolu() <= 80){
+        canon->setAngleV(canon->getAngleV()+0.1);
+        canon->setAngleVAbsolu(canon->getAngleVAbsolu()+10);
+        canon->setScale(canon->getAngleV());
+    }
+    if (event->key() == Qt::Key_S && canon->getAngleVAbsolu() >= 10){
+        canon->setAngleV(canon->getAngleV()-0.1);
+        canon->setAngleVAbsolu(canon->getAngleVAbsolu()-10);
+        canon->setScale(canon->getAngleV());
+    }
+    cout << "AngleVAbsolu " << canon->getAngleVAbsolu() << endl;
 }
 
 void Tank::tirer(QString typeObus){

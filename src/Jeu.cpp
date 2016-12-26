@@ -1,4 +1,5 @@
 #include "../head/Jeu.h"
+#include "../head/Menu.h"
 
 static int aQuiLeTour = 0;
 
@@ -27,27 +28,16 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     }
 
     //Ajout des obstacles
-    for (int i = 0 ; i<15 ; i+=4)
-        for (int j = 1 ; j<15 ; j+=4)
-            if
-            (   (terrain->getCases(i,j)==VIDE)  &&  (terrain->getCases(i+1,j-1)==VIDE) &&
-                (terrain->getCases(i,j-1)==VIDE)&&  (terrain->getCases(i+1,j)==VIDE)
-            )
+    for (int i = 0 ; i<8 ; i+=3)
+        for (int j = i%2 ; j<8 ; j+=3)
+            if ( terrain->getCases(i,j)==VIDE )
             {
                 if(i==j){
                     terrain->addItem(new Obstacle(ARBRE,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
                     terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ARBRE);
-                    terrain->updateCases(Point((i+1)*tailleCase,Y-tailleCase-j*tailleCase),ARBRE);
-                    terrain->updateCases(Point((i+1)*tailleCase,Y-tailleCase-(j-1)*tailleCase),ARBRE);
-                    terrain->updateCases(Point(i*tailleCase,Y-tailleCase-(j-1)*tailleCase),ARBRE);
                 } else {
                     terrain->addItem(new Obstacle(ROCHER,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
                     terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ROCHER);
-                    terrain->addItem(new Obstacle(ROCHER,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
-                    terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ROCHER);
-                    terrain->updateCases(Point((i+1)*tailleCase,Y-tailleCase-j*tailleCase),ROCHER);
-                    terrain->updateCases(Point((i+1)*tailleCase,Y-tailleCase-(j-1)*tailleCase),ROCHER);
-                    terrain->updateCases(Point(i*tailleCase,Y-tailleCase-(j-1)*tailleCase),ROCHER);
                 }
             }
 
@@ -60,11 +50,16 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     setBackgroundBrush(QPixmap(":/terrain.jpg")); //arriere plan
     setMinimumSize(X,Y);
 
+    QObject::connect(this, SIGNAL(fini()), this, SLOT(message()));
+
     tourDeJeu();
 }
 
 void Jeu::tourDeJeu()
 {
+    while (estMort(aQuiLeTour+1))
+        aQuiLeTour=(aQuiLeTour+1)%nombreJoueurs;
+
     cout << "tour "<< aQuiLeTour << endl;
     tanks[aQuiLeTour]->setFocus();
 
@@ -184,28 +179,18 @@ void Jeu::tourDeJeu()
         prochain = (prochain+1)%nombreJoueurs;
 
     if (prochain == aQuiLeTour)
-        cout << "Jeu fini" << endl;
+        emit fini();
     else
         aQuiLeTour = prochain;
 }
-void Jeu::setJoueurMort(int numJoueur){
-    joueursMorts.push_back(numJoueur);
-    cout << joueursMorts[0] << endl;
-}
-bool Jeu::estMort(int numJoueur){
-    cout << "text de mort sur " << numJoueur;
-    for (int i = 0 ; i<joueursMorts.size() ; i++)
-        if (joueursMorts[i] == numJoueur){
-            return true;
-            cout << "est mort " << joueursMorts[i] << endl;
-        }
-    return false;
-}
 
 void Jeu::wait(){
-    QTimer::singleShot(2000,this,SLOT(tourDeJeu()));
+    QTimer::singleShot(1500,this,SLOT(tourDeJeu()));
 }
-
+void Jeu::message(){
+    QMessageBox::information(this,"Fin de la partie",(QString("<html><font color='white'>Le joueur n° </font></html>")+QString::number(aQuiLeTour+1)+QString("<html><font color='white'> a remporté la partie</font></html>")),"QUITTER");
+    (dynamic_cast<Menu*>(parentWidget()))->quitterJeu();
+}
 Terrain* Jeu::getTerrain(){
     return terrain;
 }
@@ -213,6 +198,18 @@ Tank* Jeu::getTankCourant(){
     if (aQuiLeTour == 0)
         return tanks[nombreJoueurs-1];
     return tanks[aQuiLeTour-1];
+}
+void Jeu::setJoueurMort(int numJoueur){
+    joueursMorts.push_back(numJoueur);
+    cout << joueursMorts[0] << endl;
+}
+bool Jeu::estMort(int numJoueur){
+    for (int i = 0 ; i<joueursMorts.size() ; i++)
+        if (joueursMorts[i] == numJoueur){
+            return true;
+            cout << "est mort " << joueursMorts[i] << endl;
+        }
+    return false;
 }
 
 void Jeu::resizeEvent(QResizeEvent* event)
