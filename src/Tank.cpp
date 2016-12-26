@@ -6,36 +6,42 @@ const int uniteDeplacement = Y/120;
 Tank::Tank(int num, Terrain* t, QGraphicsItem *parent)
     : QGraphicsPixmapItem(parent), nbObus1(10), nbObus2(3), nbObus3(2)
 {
-    capaciteDeplacement = Y/10;
+    capaciteDeplacement = Y/2;
+    resistance = 20;
     numJoueur = num;
     terrain = t;
 
     //Insertion de l'image du tank et du canon
-    QPixmap imageTank(":/tank1.png");
-    QPixmap imageCanon(":/canon1.png");
-    imageTank = imageTank.scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    setPixmap(imageTank);
-    imageCanon = imageCanon.scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QPixmap* imageTank;
+    QPixmap* imageCanon;
 
     switch (numJoueur){
         case 1 :
+            imageTank = new QPixmap(":/tank1.png");
+            imageCanon = new QPixmap(":/canon1.png");
+            *imageTank = imageTank->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setPixmap(*imageTank);
+            *imageCanon = imageCanon->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             setRotation(rotation()+180);
             direction = DROITE;
-            setPos(Y/120,Y/2 - getRayon());
+            setPos(Y/120,Y/2 - getRayon() - (getRayon()%5));
             break;
         case 2 :
+            imageTank = new QPixmap(":/tank2.png");
+            imageCanon = new QPixmap(":/canon2.png");
+            *imageTank = imageTank->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setPixmap(*imageTank);
+            *imageCanon = imageCanon->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             direction = GAUCHE;
-            setPos(Y - Y/120 - getRayon()*2,Y/2 - getRayon());
+            setPos(Y - Y/120 - (getRayon() - (getRayon()%5))*2, Y/2 - (getRayon() - (getRayon()%5)));
             break;
     }
+    setTransformOriginPoint(getRayon(),getRayon());
 
+    //Création du canon
     canon = new Canon(direction, this);
     canon->setFlag(QGraphicsItem::ItemIsFocusable);
-    canon->setPixmap(imageCanon);
-
-    //Positionnement du tank et du canon
-    setTransformOriginPoint(getRayon(),getRayon());
-    canon->setTransformOriginPoint(canon->boundingRect().width()/3,canon->boundingRect().height());
+    canon->setPixmap(*imageCanon);
     canon->setX(canon->x()-getRayon()/4);
 }
 
@@ -44,14 +50,20 @@ void Tank::keyPressEvent(QKeyEvent *event)
     setTransformOriginPoint(getRayon(),getRayon());
 
     if (event->key() == Qt::Key_Left && capaciteDeplacement>0){
-        if (direction == HAUT)
+        if (direction == HAUT){
             setRotation(rotation()-90);
-        else if (direction == BAS)
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()+90);
+        }
+        else if (direction == BAS){
             setRotation(rotation()+90);
-        else if (direction == DROITE)
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()-90);
+        }
+        else if (direction == DROITE){
             setRotation(rotation()+180);
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()-180);
+        }
         else if
-        (getPosition().getX()-uniteDeplacement > 0
+        (getPosition().getX()-uniteDeplacement >= 0
         && (
             terrain->getCases((getPosition().getX()-uniteDeplacement)/tailleCase,getPosition().getY()/tailleCase) == VIDE
             || (numJoueur == 1 &&
@@ -81,16 +93,21 @@ void Tank::keyPressEvent(QKeyEvent *event)
             emit capaciteChanged(capaciteDeplacement);
         }
         direction = GAUCHE;
-        canon->setAngleH(180);
     }
     else if (event->key() == Qt::Key_Right && capaciteDeplacement>0){
-        if (direction == HAUT)
+        if (direction == HAUT){
             setRotation(rotation()+90);
-        else if (direction == BAS)
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()-90);
+        }
+        else if (direction == BAS){
             setRotation(rotation()-90);
-        else if (direction == GAUCHE)
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()+90);
+        }
+        else if (direction == GAUCHE){
             setRotation(rotation()+180);
-        else if (getPosition().getX()+2*getRayon()+uniteDeplacement < Y
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()+180);
+        }
+        else if (getPosition().getX()+2*getRayon()+uniteDeplacement <= Y
         && (
             terrain->getCases((getPosition().getX()+2*getRayon()+uniteDeplacement)/tailleCase,getPosition().getY()/tailleCase) == VIDE
             || (numJoueur == 1 &&
@@ -120,16 +137,21 @@ void Tank::keyPressEvent(QKeyEvent *event)
             emit capaciteChanged(capaciteDeplacement);
         }
         direction = DROITE;
-        canon->setAngleH(0);
     }
     else if (event->key() == Qt::Key_Up && capaciteDeplacement>0){
-        if (direction == DROITE)
+        if (direction == DROITE){
             setRotation(rotation()-90);
-        else if (direction == BAS)
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()+90);
+        }
+        else if (direction == BAS){
             setRotation(rotation()+180);
-        else if (direction == GAUCHE)
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()-180);
+        }
+        else if (direction == GAUCHE){
             setRotation(rotation()+90);
-        else if (getPosition().getY()-uniteDeplacement > 0
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()-90);
+        }
+        else if (getPosition().getY()-uniteDeplacement >= 0
         && (
             terrain->getCases(getPosition().getX()/tailleCase,(getPosition().getY()-uniteDeplacement)/tailleCase) == VIDE
             || (numJoueur == 1 &&
@@ -159,16 +181,21 @@ void Tank::keyPressEvent(QKeyEvent *event)
             emit capaciteChanged(capaciteDeplacement);
         }
         direction = HAUT;
-        canon->setAngleH(90);
     }
     else if (event->key() == Qt::Key_Down && capaciteDeplacement>0){
-        if (direction == HAUT)
+        if (direction == HAUT){
             setRotation(rotation()+180);
-        else if (direction == DROITE)
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()-180);
+        }
+        else if (direction == DROITE){
             setRotation(rotation()+90);
-        else if (direction == GAUCHE)
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()-90);
+        }
+        else if (direction == GAUCHE){
             setRotation(rotation()-90);
-        else if (getPosition().getY()+2*getRayon()+uniteDeplacement < Y-2
+            canon->setAngleHAbsolu(canon->getAngleHAbsolu()+90);
+        }
+        else if (getPosition().getY()+2*getRayon()+uniteDeplacement <= Y
         && (
             terrain->getCases(getPosition().getX()/tailleCase,(getPosition().getY()+2*getRayon()+uniteDeplacement)/tailleCase) == VIDE
             || (numJoueur == 1 &&
@@ -198,13 +225,6 @@ void Tank::keyPressEvent(QKeyEvent *event)
             emit capaciteChanged(capaciteDeplacement);
         }
         direction = BAS;
-        canon->setAngleH(270);
-    }
-    else if (event->key() == Qt::Key_Space){
-        //Creation obus
-        Obus* ob = new Obus(3,canon->getAngleH(), canon->getAngleV());
-        ob->setPos(x(),y());
-        terrain->addItem(ob);
     }
 
     //On supprimer le tank courant du terrain puis on insrit sa nouvelle position
@@ -216,7 +236,35 @@ void Tank::keyPressEvent(QKeyEvent *event)
     }
 
     cout << getPosition().getX() << ", " << getPosition().getY() << endl;
-    //terrain->affiche();
+    terrain->affiche();
+
+
+    //##################### Mouvement du canon
+    canon->setTransformOriginPoint(getRayon()+getRayon()/4+10,getRayon()+1);
+    if (event->key() == Qt::Key_Q){
+        canon->setRotation(canon->getAngleH()-1);
+        canon->setAngleH(canon->getAngleH()-1);
+        canon->setAngleHAbsolu(canon->getAngleHAbsolu()+1);
+    }
+    if (event->key() == Qt::Key_D){
+        canon->setRotation(canon->getAngleH()+1);
+        canon->setAngleH(canon->getAngleH()+1);
+        canon->setAngleHAbsolu(canon->getAngleHAbsolu()-1);
+    }
+    cout << "AngleHAbsolu " << canon->getAngleHAbsolu() << endl;
+}
+
+void Tank::tirer(QString typeObus){
+    int type = typeObus[1].digitValue();
+    switch (type) {
+        case 1: nbObus1--; break;
+        case 2: nbObus2--; break;
+        case 3: nbObus3--; break;
+    }
+    Obus* ob = new Obus(type,canon->getAngleHAbsolu(), canon->getAngleVAbsolu());
+    //JE TE LAISSE AJUSTER LE POINT D'ORIGINE DE L'OBUS
+    ob->setPos(x()+getRayon()-uniteDeplacement,y()+getRayon()-uniteDeplacement);
+    terrain->addItem(ob);
 }
 
 Point Tank::getPosition(){
@@ -240,6 +288,15 @@ int Tank::getNbObus2(){
 }
 int Tank::getNbObus3(){
     return nbObus3;
+}
+void Tank::decrementeResistance(int forceObus){
+    resistance-=forceObus;
+}
+int Tank::getResistance(){
+    return resistance;
+}
+int Tank::getNumJoueur(){
+    return numJoueur;
 }
 
 void Tank::adapter(QSize nouvelleTaille, QSize ancienneTaille)

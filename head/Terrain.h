@@ -19,7 +19,7 @@ class Terrain : public QGraphicsScene
 
     private:
         //8 cases : le terrain est un carré de coté Y et le tank est un carré de coté Y/8
-        ELEMENTS cases[8][8];
+        ELEMENTS cases[16][16];
 };
 
 #endif // TERRAIN_H

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="">
+        <file>terrain.jpg</file>
+    </qresource>
+</RCC>

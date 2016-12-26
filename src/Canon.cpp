@@ -6,11 +6,13 @@ using namespace std;
 Canon::Canon(DIRECTION dir, QGraphicsItem *parent) : QGraphicsPixmapItem(parent)
 {
     angleV = 0;
+    angleH = 0;
+    angleVAbsolu = 0;
     switch(dir){
-        case DROITE :   angleH = 0;     break;
-        case GAUCHE :   angleH = 180;   break;
-        case HAUT :     angleH = 90;    break;
-        case BAS :      angleH = 270;   break;
+        case DROITE :   angleHAbsolu = 0;     break;
+        case GAUCHE :   angleHAbsolu = 180;   break;
+        case HAUT :     angleHAbsolu = 90;    break;
+        case BAS :      angleHAbsolu = 270;   break;
    }
 }
 
@@ -26,8 +28,15 @@ void Canon::setAngleH(double a){
 void Canon::setAngleV(double a){
     angleV = a;
 }
-
-void Canon::keyPressEvent(QKeyEvent *event)
-{
-    cout << "here" << endl;
+double Canon::getAngleHAbsolu(){
+    return angleHAbsolu;
+}
+double Canon::getAngleVAbsolu(){
+    return angleVAbsolu;
+}
+void Canon::setAngleHAbsolu(double a){
+    angleHAbsolu = a;
+}
+void Canon::setAngleVAbsolu(double a){
+    angleVAbsolu = a;
 }

@@ -1,6 +1,6 @@
 #include "../head/MenuJeu.h"
 
-MenuJeu::MenuJeu(QWidget* fenetre) : QWidget()
+MenuJeu::MenuJeu(QWidget* fenetre, QWidget *parent) : QWidget(parent)
 {
     setGeometry(0,0,X-Y,Y);
     layout = new QGridLayout;

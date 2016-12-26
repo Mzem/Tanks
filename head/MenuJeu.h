@@ -9,7 +9,7 @@ class MenuJeu : public QWidget
     Q_OBJECT
 
     public:
-        MenuJeu(QWidget* fenetre);
+        MenuJeu(QWidget* fenetre, QWidget *parent=0);
         QGridLayout* getLayout();
 
     private:

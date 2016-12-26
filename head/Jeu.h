@@ -8,7 +8,6 @@
 #include <QGraphicsProxyWidget>
 #include <QLabel>
 #include <QGroupBox>
-#include <QRadioButton>
 #include <QLCDNumber>
 #include "../head/MenuJeu.h"
 #include "../head/Tank.h"
@@ -19,15 +18,19 @@ class Jeu : public QGraphicsView
 
     public:
         Jeu(int nombreJoueurs, QWidget* parent=0);
-        void tourDeJeu(int);
         Terrain* getTerrain();
+        Tank* getTankCourant();
+        void setJoueurMort(int);
+        bool estMort(int);
         void resizeEvent(QResizeEvent* event);
 
     public slots:
-        void changerFocus(QString);
+        void tourDeJeu();
+        void wait();
 
     private:
         int nombreJoueurs;
+        vector<int> joueursMorts;
         Terrain* terrain;
         MenuJeu* menu;
         Tank** tanks;

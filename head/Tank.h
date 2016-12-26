@@ -3,7 +3,6 @@
 
 //Création d'un tank (joueur), déplacement et tir
 
-#include <QGraphicsItem>
 #include <QKeyEvent>
 #include "../head/Terrain.h"
 #include "../head/Canon.h"
@@ -15,23 +14,30 @@ class Tank : public QObject, public QGraphicsPixmapItem
 
     public:
         Tank(int numJoueur, Terrain*, QGraphicsItem * parent=0);
+        void decrementeResistance(int);
+        int getResistance();
+        int getNumJoueur();
         //Position centrale du tank
         Point getPosition();
         int getRayon();
-        void keyPressEvent(QKeyEvent* event);
-        //Adapte le tank a la la taille de la fenetre
-        void adapter(QSize nouvelleTaille, QSize ancienneTaille);
         Canon* getCanon();
         int getCapacite();
         int getNbObus1();
         int getNbObus2();
         int getNbObus3();
+        void keyPressEvent(QKeyEvent* event);
+        //Adapte le tank a la la taille de la fenetre
+        void adapter(QSize nouvelleTaille, QSize ancienneTaille);
+
+    public slots:
+        void tirer(QString);
 
     signals:
         void capaciteChanged(int);
 
     private:
         int numJoueur;
+        int resistance;
         //Pointe vers le terrain du jeu pour pouvoir le modifier
         Terrain* terrain;
         DIRECTION direction;

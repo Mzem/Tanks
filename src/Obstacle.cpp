@@ -35,3 +35,10 @@ Obstacle::Obstacle(ELEMENTS t, Point pos, QGraphicsItem * parent): QGraphicsPixm
 
     setPos(pos.getX(),pos.getY());
 }
+
+void Obstacle::decrementeResistance(int forceObus){
+    resistance-=forceObus;
+}
+int Obstacle::getResistance(){
+    return resistance;
+}

@@ -44,10 +44,14 @@ RESOURCES += \
     img/logo.qrc \
     img/bg.qrc \
     img/tank1.qrc \
+    img/tank2.qrc \
+    img/tank3.qrc \
+    img/tank4.qrc \
     img/canon1.qrc \
+    img/canon2.qrc \
+    img/canon3.qrc \
+    img/canon4.qrc \
     img/rocher.qrc \
     img/arbre.qrc \
-    img/obus1.qrc \
-    img/obus2.qrc \
-    img/obus3.qrc
-    
+    img/obus.qrc \
+    img/terrain.qrc

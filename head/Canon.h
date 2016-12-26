@@ -10,16 +10,22 @@ enum DIRECTION {HAUT,BAS,DROITE,GAUCHE};
 class Canon : public QGraphicsPixmapItem
 {
     public:
-        Canon(DIRECTION, QGraphicsItem *parent);
+        Canon(DIRECTION, QGraphicsItem *parent=0);
         double getAngleH();
         double getAngleV();
         void setAngleH(double);
         void setAngleV(double);
-        void keyPressEvent(QKeyEvent* event);
+        double getAngleHAbsolu();
+        double getAngleVAbsolu();
+        void setAngleHAbsolu(double);
+        void setAngleVAbsolu(double);
 
     private:
         double angleH;    //0 - 360
         double angleV;    //0 - 90
+        double angleHAbsolu;
+        double angleVAbsolu;
+
 };
 
 #endif // CANON_H

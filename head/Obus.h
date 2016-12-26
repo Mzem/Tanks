@@ -3,6 +3,7 @@
 
 #include <QGraphicsItem>
 #include <QTimer>
+#include <typeinfo>
 #include "../head/Definitions.h"
 #include "../head/Point.h"
 
