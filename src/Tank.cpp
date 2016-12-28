@@ -35,6 +35,26 @@ Tank::Tank(int num, Terrain* t, QGraphicsItem *parent)
             direction = GAUCHE;
             setPos(Y - Y/120 - (getRayon() - (getRayon()%5))*2, Y/2 - (getRayon() - (getRayon()%5)));
             break;
+        case 3 :
+            imageTank = new QPixmap(":/tank3.png");
+            imageCanon = new QPixmap(":/canon3.png");
+            *imageTank = imageTank->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setPixmap(*imageTank);
+            *imageCanon = imageCanon->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setRotation(rotation()+90);
+            direction = HAUT;
+            setPos(Y/2 - (getRayon() - (getRayon()%5)),Y - Y/120 - (getRayon() - (getRayon()%5))*2);
+            break;
+        case 4 :
+            imageTank = new QPixmap(":/tank4.png");
+            imageCanon = new QPixmap(":/canon4.png");
+            *imageTank = imageTank->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setPixmap(*imageTank);
+            *imageCanon = imageCanon->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setRotation(rotation()-90);
+            direction = BAS;
+            setPos(Y/2 - (getRayon() - (getRayon()%5)),Y/120);
+            break;
     }
     setTransformOriginPoint(getRayon(),getRayon());
 
