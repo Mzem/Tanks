@@ -23,6 +23,7 @@ class Obus : public QObject, public QGraphicsPixmapItem
         int rayon;
         double angleH;
         double angleV;
+        int distanceImpact;
 
 };
 

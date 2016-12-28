@@ -40,7 +40,8 @@ void Terrain::vider(ELEMENTS elem)
 }
 
 void Terrain::impact(Point ptImpact){
-    //modif cases
+    cases[ptImpact.getX()/75][ptImpact.getY()/75]=VIDE;
+    cout << ptImpact.getX() << " " << ptImpact.getY() << endl;
 }
 
 ELEMENTS Terrain::getCases(int i, int j)
