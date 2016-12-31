@@ -30,7 +30,11 @@ Obus::Obus(int t, double aH, double aV, QGraphicsItem *parent) : QObject(), QGra
     i=1;
     //dans combien de case sa va tomber (le nombre d'appel qu'on aura)
     cout << aV << endl;
-    distanceImpact = (-0.049382716049383) *(aV * aV) + 4.44444444444444 * aV;
+    distanceImpact = (-0.9375) * aV + 90;//90 car obus avance d'unitededeplacement (5*90=450)
+    
+    //si on veux une courbe parabolique 
+    //distanceImpact = (-0.049382716049383) *(aV * aV) + 4.44444444444444 * aV;
+    
     //Mouvement de l'obus
     QTimer* timer = new QTimer(this); 
     connect(timer,SIGNAL(timeout()),this,SLOT(bouger()));

@@ -28,17 +28,22 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     }
 
     //Ajout des obstacles
+    int compteur=0;
     for (int i = 0 ; i<8 ; i+=3)
         for (int j = i%2 ; j<8 ; j+=3)
             if ( terrain->getCases(i,j)==VIDE )
             {
-                if(i==j){
+                if(compteur % 3 == 0){
                     terrain->addItem(new Obstacle(ARBRE,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
                     terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ARBRE);
-                } else {
+                } else if(compteur % 3 == 1) {
                     terrain->addItem(new Obstacle(ROCHER,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
                     terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ROCHER);
+                } else {
+                    terrain->addItem(new Obstacle(EAU,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
+                    terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),EAU);
                 }
+                compteur++;
             }
 
     //Rendre la scene (le terrain) visible dans la vue (le jeu)

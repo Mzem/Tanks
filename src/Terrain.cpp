@@ -83,6 +83,9 @@ void Terrain::affiche(){
                 case CREVASSE : txt = addText("C");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
+                case EAU : txt = addText("E");
+                            txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
+                            break;                
                 default : txt = addText("ERR");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
