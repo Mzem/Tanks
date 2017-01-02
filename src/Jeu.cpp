@@ -14,6 +14,7 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     terrain = new Terrain(parent);
     terrain->setSceneRect(0,0,X,Y);
     
+    //pour creer deux joueurs dont l'IA
     if(nombreJoueurs == 1) nbJoueurs++;
 
     //Creation des joueurs (tanks) et ajout au terrain (scene)
@@ -31,6 +32,7 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
         }
     }
     
+    //pour dire que le joueur 2 est l'IA
     if(nombreJoueurs == 1) {
 		nombreJoueurs++;
 		tanks[1]->setIA();
