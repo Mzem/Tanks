@@ -52,5 +52,6 @@ void Menu::paintEvent(QPaintEvent *pe){
 }
 
 Menu::~Menu(){
+    cout << "Destruction du menu" << endl;
     delete boutons;
 }

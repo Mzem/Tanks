@@ -47,6 +47,7 @@ void Obus::bouger()
         //On multiplie donc le nombre de cases par 8
         QGraphicsEllipseItem* crevasse = new QGraphicsEllipseItem(x()-(tailleCase/8)*rayon,y()-(tailleCase/8)*rayon,(tailleCase/4)*rayon,(tailleCase/4)*rayon);
         crevasse->setBrush(QBrush(QColor(170,130,70)));
+        crevasse->setZValue(-1);
         J->getTerrain()->addItem(crevasse);
 
         //On récupère la liste des items qui entrent en collision avec la crevasse
@@ -70,10 +71,6 @@ void Obus::bouger()
                         case 4: J->getTerrain()->vider(TANK4);  break;
                     }
                     delete elementsTouches[i];
-                } else {
-                    //Pour que les tanks touchés restent au dessus de la crevasse
-                    J->getTerrain()->removeItem(elementsTouches[i]);
-                    J->getTerrain()->addItem(elementsTouches[i]);
                 }
             }
             //Si c'est un obstacle
@@ -85,10 +82,6 @@ void Obus::bouger()
                     J->getTerrain()->updateCases(Point(elementsTouches[i]->pos().x()+tailleCase/2,elementsTouches[i]->pos().y()+tailleCase/2),VIDE);
                     J->getTerrain()->removeItem(elementsTouches[i]);
                     delete elementsTouches[i];
-                } else {
-                    //Pour que les obstacles touchés restent au dessus de la crevasse
-                    J->getTerrain()->removeItem(elementsTouches[i]);
-                    J->getTerrain()->addItem(elementsTouches[i]);
                 }
             }
         }

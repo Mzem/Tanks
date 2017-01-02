@@ -19,5 +19,6 @@ QGridLayout* MenuJeu::getLayout(){
 }
 
 MenuJeu::~MenuJeu(){
+    cout << "Destruction du menu du jeu" << endl;
     delete layout;
 }

@@ -20,6 +20,7 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     {
         tanks[i] = new Tank(i+1,terrain);
         tanks[i]->setFlag(QGraphicsItem::ItemIsFocusable);
+        tanks[i]->setZValue(1);   //Plus haute priorité dans l'affichage (0 par défaut, pour les obstacles)
         terrain->addItem(tanks[i]);
         switch (i){
             case 0 : terrain->updateCases(tanks[i]->getPosition(),TANK1,tanks[i]->getRayon()); break;
@@ -66,11 +67,7 @@ void Jeu::tourDeJeu()
     while (estMort(aQuiLeTour+1))
         aQuiLeTour=(aQuiLeTour+1)%nombreJoueurs;
 
-    //On retire et rajoute le tank pour qu'il s'affiche en dessus des autres elements du terrain
-    terrain->removeItem(tanks[aQuiLeTour]);
-    terrain->addItem(tanks[aQuiLeTour]);
     tanks[aQuiLeTour]->setFocus();
-    terrain->update();
 
     //Couleur du menu selon le joueur
     QPalette p;
@@ -225,10 +222,8 @@ bool Jeu::estMort(int numJoueur){
 }
 
 Jeu::~Jeu()
-{
+{   cout << "Destruction du jeu" << endl;
     delete tanks;
-    delete terrain;
-    delete menu;
     delete tirObus1;
     delete tirObus2;
     delete tirObus3;
