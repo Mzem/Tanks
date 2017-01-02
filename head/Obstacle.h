@@ -2,15 +2,15 @@
 #define OBSTACLE_H
 
 #include <QGraphicsItem>
-#include "../head/Definitions.h"
-#include "../head/Point.h"
+#include "Definitions.h"
+#include "Point.h"
 
-enum ELEMENTS {VIDE, TANK1, TANK2, TANK3, TANK4, ROCHER, ARBRE, EAU, CREVASSE};
+enum ELEMENTS {VIDE, TANK1, TANK2, TANK3, TANK4, ROCHER, ARBRE, EAU};
 
 class Obstacle : public QGraphicsPixmapItem
 {
     public:
-        Obstacle(ELEMENTS type, Point position, QGraphicsItem * parent=0);
+        Obstacle(ELEMENTS type, Point position, QGraphicsItem* parent=0);
         void decrementeResistance(int);
         int getResistance();
 

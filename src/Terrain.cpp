@@ -30,7 +30,6 @@ void Terrain::updateCases(Point coordElement, ELEMENTS elem, int rayonTank)
     else
         cases[(coordElement.getX())/tailleCase][(coordElement.getY())/tailleCase] = elem;
 }
-
 void Terrain::vider(ELEMENTS elem)
 {
     for (int i = 0 ; i<8 ; i++)
@@ -38,11 +37,6 @@ void Terrain::vider(ELEMENTS elem)
             if (cases[i][j] == elem)
                 cases[i][j] = VIDE;
 }
-
-void Terrain::impact(Point ptImpact){
-    //modif cases
-}
-
 ELEMENTS Terrain::getCases(int i, int j)
 {
     return cases[i][j];
@@ -79,7 +73,7 @@ void Terrain::affiche(){
                 case ARBRE : txt = addText("A");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
-                case CREVASSE : txt = addText("C");
+                case EAU : txt = addText("E");
                             txt->setPos(i*tailleCase+tailleCase/2,j*tailleCase+tailleCase/2);
                             break;
                 default : txt = addText("ERR");

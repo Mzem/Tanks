@@ -25,3 +25,7 @@ ButtonWidget::ButtonWidget(QStringList texts, QColor coul, QWidget *parent) : QW
 
     setLayout(layout);
 }
+
+ButtonWidget::~ButtonWidget(){
+    delete signalMapper;
+}

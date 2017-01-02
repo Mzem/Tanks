@@ -1,5 +1,7 @@
 #include "../head/Jeu.h"
 #include "../head/Menu.h"
+#include <stdlib.h>
+#include <time.h>
 
 static int aQuiLeTour = 0;
 
@@ -28,16 +30,21 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     }
 
     //Ajout des obstacles
-    for (int i = 0 ; i<8 ; i+=3)
-        for (int j = i%2 ; j<8 ; j+=3)
+    srand(time(NULL));
+    for (int i = 0 ; i<8 ; i++)
+        for (int j = 0 ; j<8 ; j++)
             if ( terrain->getCases(i,j)==VIDE )
             {
-                if(i==j){
-                    terrain->addItem(new Obstacle(ARBRE,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
-                    terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ARBRE);
-                } else {
-                    terrain->addItem(new Obstacle(ROCHER,Point(i*tailleCase,Y-tailleCase-j*tailleCase)));
-                    terrain->updateCases(Point(i*tailleCase,Y-tailleCase-j*tailleCase),ROCHER);
+                int alea = rand()%10;
+                if (alea < 2){
+                    terrain->addItem(new Obstacle(ARBRE,Point(i*tailleCase,j*tailleCase)));
+                    terrain->updateCases(Point(i*tailleCase,j*tailleCase),ARBRE);
+                } else if (alea <4){
+                    terrain->addItem(new Obstacle(ROCHER,Point(i*tailleCase,j*tailleCase)));
+                    terrain->updateCases(Point(i*tailleCase,j*tailleCase),ROCHER);
+                } else if (alea <5){
+                    terrain->addItem(new Obstacle(EAU,Point(i*tailleCase,j*tailleCase)));
+                    terrain->updateCases(Point(i*tailleCase,j*tailleCase),EAU);
                 }
             }
 
@@ -46,11 +53,10 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setCursor(Qt::ForbiddenCursor);
-    //setFocusPolicy(Qt::NoFocus);
     setBackgroundBrush(QPixmap(":/terrain.jpg")); //arriere plan
-    setMinimumSize(X,Y);
+    setFixedSize(X,Y);
 
-    QObject::connect(this, SIGNAL(fini()), this, SLOT(message()));
+    QObject::connect(this, SIGNAL(jeuFini()), this, SLOT(messageFin()));
 
     tourDeJeu();
 }
@@ -60,10 +66,13 @@ void Jeu::tourDeJeu()
     while (estMort(aQuiLeTour+1))
         aQuiLeTour=(aQuiLeTour+1)%nombreJoueurs;
 
-    cout << "tour "<< aQuiLeTour << endl;
+    //On retire et rajoute le tank pour qu'il s'affiche en dessus des autres elements du terrain
+    terrain->removeItem(tanks[aQuiLeTour]);
+    terrain->addItem(tanks[aQuiLeTour]);
     tanks[aQuiLeTour]->setFocus();
+    terrain->update();
 
-    //Changement du menu selon le joueur
+    //Couleur du menu selon le joueur
     QPalette p;
     switch (aQuiLeTour) {
     case 0: p.setColor(QPalette::WindowText, QColor(100,180,50));
@@ -81,17 +90,18 @@ void Jeu::tourDeJeu()
     QGraphicsProxyWidget* menuProxyWidget = terrain->addWidget(menu);
     menuProxyWidget->setPos(Y,0);   //On fait en sorte que le terrain fasse un carré de coté Y = X-(X-Y)
 
+    //Affichage de "à qui est le tour"
     QGroupBox* textTour = new QGroupBox(QString("Tour du tank n°")+QString::number(aQuiLeTour+1),menu);
     textTour->setAlignment(Qt::AlignHCenter);
     textTour->setFont(QFont("arial",16));
     textTour->setPalette(p);
 
-    //Etat du tank
+    //Affichage de l'état du tank
     QGroupBox* textCapacite = new QGroupBox("Capacité du tank");
     textCapacite->setAlignment(Qt::AlignHCenter);
     textCapacite->setFont(QFont("arial",10));
     //Affichage en temps reel de la capacité
-    QLCDNumber* capacite= new QLCDNumber(this);
+    QLCDNumber* capacite = new QLCDNumber(this);
     capacite->setSegmentStyle(QLCDNumber::Flat);
     capacite->display(tanks[aQuiLeTour]->getCapacite());
     QObject::connect(tanks[aQuiLeTour], SIGNAL(capaciteChanged(int)), capacite, SLOT(display(int)));
@@ -103,7 +113,7 @@ void Jeu::tourDeJeu()
     QGroupBox* textResist = new QGroupBox("Resistance du tank");
     textResist->setAlignment(Qt::AlignHCenter);
     textResist->setFont(QFont("arial",10));
-    QLCDNumber* resist= new QLCDNumber(this);
+    QLCDNumber* resist = new QLCDNumber(this);
     resist->setSegmentStyle(QLCDNumber::Flat);
     resist->display(tanks[aQuiLeTour]->getResistance());
     //Ajout à la vbox
@@ -112,7 +122,7 @@ void Jeu::tourDeJeu()
     textResist->setLayout(vboxResist);
 
     //Positionnement canon et tir
-    QGroupBox* textCanon = new QGroupBox("Réglage du canon et tir");
+    QGroupBox* textCanon = new QGroupBox("Choix de l'obus et tir");
     textCanon->setAlignment(Qt::AlignHCenter);
     textCanon->setFont(QFont("arial",10));
     //Obus 1
@@ -121,10 +131,10 @@ void Jeu::tourDeJeu()
     o1Restants->setSegmentStyle(QLCDNumber::Flat);
     o1Restants->display(tanks[aQuiLeTour]->getNbObus1());
     o1->setFont(QFont("arial",7));
-    ButtonWidget* tirObus1 = new ButtonWidget(QStringList("O1 - TIRER"),QColor(Qt::black));
+    tirObus1 = new ButtonWidget(QStringList("O1 - TIRER"),QColor(Qt::black));
     if (tanks[aQuiLeTour]->getNbObus1()>0){
         QObject::connect(tirObus1, SIGNAL(clicked(QString)), tanks[aQuiLeTour], SLOT(tirer(QString)));
-        QObject::connect(tirObus1, SIGNAL(clicked(QString)), this, SLOT(wait()));
+        QObject::connect(tirObus1, SIGNAL(clicked(QString)), this, SLOT(waitTir()));
     } else
         tirObus1->setDisabled(true);
     //Obus 2
@@ -133,10 +143,10 @@ void Jeu::tourDeJeu()
     o2Restants->setSegmentStyle(QLCDNumber::Flat);
     o2Restants->display(tanks[aQuiLeTour]->getNbObus2());
     o2->setFont(QFont("arial",7));
-    ButtonWidget* tirObus2 = new ButtonWidget(QStringList("O2 - TIRER"),QColor(Qt::black));
+    tirObus2 = new ButtonWidget(QStringList("O2 - TIRER"),QColor(Qt::black));
     if (tanks[aQuiLeTour]->getNbObus2()>0){
         QObject::connect(tirObus2, SIGNAL(clicked(QString)), tanks[aQuiLeTour], SLOT(tirer(QString)));
-        QObject::connect(tirObus2, SIGNAL(clicked(QString)), this, SLOT(wait()));
+        QObject::connect(tirObus2, SIGNAL(clicked(QString)), this, SLOT(waitTir()));
     } else
         tirObus2->setDisabled(true);
     //Obus 3
@@ -145,10 +155,10 @@ void Jeu::tourDeJeu()
     o3Restants->setSegmentStyle(QLCDNumber::Flat);
     o3Restants->display(tanks[aQuiLeTour]->getNbObus3());
     o3->setFont(QFont("arial",7));
-    ButtonWidget* tirObus3 = new ButtonWidget(QStringList("O3 - TIRER"),QColor(Qt::black));
+    tirObus3 = new ButtonWidget(QStringList("O3 - TIRER"),QColor(Qt::black));
     if (tanks[aQuiLeTour]->getNbObus3()>0){
         QObject::connect(tirObus3, SIGNAL(clicked(QString)), tanks[aQuiLeTour], SLOT(tirer(QString)));
-        QObject::connect(tirObus3, SIGNAL(clicked(QString)), this, SLOT(wait()));
+        QObject::connect(tirObus3, SIGNAL(clicked(QString)), this, SLOT(waitTir()));
     } else
         tirObus3->setDisabled(true);
     //Ajout à la vbox
@@ -164,7 +174,7 @@ void Jeu::tourDeJeu()
     vboxObus->addWidget(tirObus3);
     textCanon->setLayout(vboxObus);
 
-    //Vbox Menu global d'un tour
+    //Vbox Menu à droite global d'un tour
     QVBoxLayout* vboxTour = new QVBoxLayout;
     vboxTour->addWidget(textCapacite);
     vboxTour->addWidget(textResist);
@@ -173,23 +183,28 @@ void Jeu::tourDeJeu()
     textTour->setMaximumWidth(X-Y-18);
     menu->getLayout()->addWidget(textTour,1,0);
 
+    //Passage au prochain joueur (s'il n'est pas mort)
     int prochain = (aQuiLeTour+1)%nombreJoueurs;
 
     while (estMort(prochain+1))     //le num de joueur est augmenté de 1 (tour 0 pour le joueur 1)
         prochain = (prochain+1)%nombreJoueurs;
 
     if (prochain == aQuiLeTour)
-        emit fini();
+        emit jeuFini();
     else
         aQuiLeTour = prochain;
 }
 
-void Jeu::wait(){
+void Jeu::waitTir(){
+    tirObus1->setDisabled(true);
+    tirObus2->setDisabled(true);
+    tirObus3->setDisabled(true);
     QTimer::singleShot(1500,this,SLOT(tourDeJeu()));
 }
-void Jeu::message(){
+void Jeu::messageFin(){
     QMessageBox::information(this,"Fin de la partie",(QString("<html><font color='white'>Le joueur n° </font></html>")+QString::number(aQuiLeTour+1)+QString("<html><font color='white'> a remporté la partie</font></html>")),"QUITTER");
     (dynamic_cast<Menu*>(parentWidget()))->quitterJeu();
+    delete tanks[aQuiLeTour];
 }
 Terrain* Jeu::getTerrain(){
     return terrain;
@@ -201,35 +216,20 @@ Tank* Jeu::getTankCourant(){
 }
 void Jeu::setJoueurMort(int numJoueur){
     joueursMorts.push_back(numJoueur);
-    cout << joueursMorts[0] << endl;
 }
 bool Jeu::estMort(int numJoueur){
-    for (int i = 0 ; i<joueursMorts.size() ; i++)
-        if (joueursMorts[i] == numJoueur){
+    for (unsigned int i = 0 ; i<joueursMorts.size() ; i++)
+        if (joueursMorts[i] == numJoueur)
             return true;
-            cout << "est mort " << joueursMorts[i] << endl;
-        }
     return false;
 }
 
-void Jeu::resizeEvent(QResizeEvent* event)
+Jeu::~Jeu()
 {
-    cout << "Fenetre : " << event->size().width() <<"x"<< event->size().height() << endl;
-    /*
-    X=event->size().width();
-    Y=event->size().height();
-
-    //On adapte les tanks aux nouvelles dimensions de la fenetre
-    static bool auLancement = true;
-
-    if (!auLancement)
-    {
-        for (int i = 0 ; i < nombreJoueurs ; i++)
-        {
-            joueurs[i]->adapter(event->size(),event->oldSize());
-        }
-    }
-
-    auLancement = false;
-    */
+    delete tanks;
+    delete terrain;
+    delete menu;
+    delete tirObus1;
+    delete tirObus2;
+    delete tirObus3;
 }

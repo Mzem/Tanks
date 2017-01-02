@@ -17,7 +17,6 @@ SOURCES += \
     src/MenuJeu.cpp \
     src/Jeu.cpp \
     src/Point.cpp \
-    src/Segment.cpp \
     src/Terrain.cpp \
     src/Tank.cpp \
     src/Canon.cpp \
@@ -32,7 +31,6 @@ HEADERS += \
     head/MenuJeu.h \
     head/Jeu.h \
     head/Point.h \
-    head/Segment.h \
     head/Terrain.h \
     head/Tank.h \
     head/Canon.h \
@@ -53,5 +51,6 @@ RESOURCES += \
     img/canon4.qrc \
     img/rocher.qrc \
     img/arbre.qrc \
+    img/eau.qrc \
     img/obus.qrc \
     img/terrain.qrc

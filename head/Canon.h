@@ -21,10 +21,10 @@ class Canon : public QGraphicsPixmapItem
         void setAngleVAbsolu(double);
 
     private:
-        double angleH;    //0 - 360
-        double angleV;    //0 - 90
-        double angleHAbsolu;
-        double angleVAbsolu;
+        double angleH;          //celui de la rotation
+        double angleV;          //1.X, X entre 0 et 9 inclus, X*10 représente l'angleVAbsolu
+        double angleHAbsolu;    //0 - 360
+        double angleVAbsolu;    //0 - 90
 
 };
 

@@ -4,7 +4,7 @@ Jeu* J;
 
 Menu::Menu() : QWidget()
 {
-    setMinimumSize(X,Y);
+    setFixedSize(X,Y);
     setStyleSheet("background-image: url(:/bg.jpg); ");
     QGridLayout *layout = new QGridLayout;
 
@@ -32,7 +32,11 @@ Menu::Menu() : QWidget()
 
 void Menu::lancerJeu(QString nbJoueurs)
 {
-    J = new Jeu(nbJoueurs[0].digitValue(),this);
+    int nbJr = nbJoueurs[0].digitValue();
+    if (nbJr == 1)
+        J = new Jeu(2,this);
+    else
+        J = new Jeu(nbJr,this);
     J->show();
 }
 
@@ -45,4 +49,8 @@ void Menu::paintEvent(QPaintEvent *pe){
   o.initFrom(this);
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &o, &p, this);
+}
+
+Menu::~Menu(){
+    delete boutons;
 }

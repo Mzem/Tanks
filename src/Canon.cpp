@@ -1,8 +1,5 @@
 #include "../head/Canon.h"
 
-#include <iostream>
-using namespace std;
-
 Canon::Canon(DIRECTION dir, QGraphicsItem *parent) : QGraphicsPixmapItem(parent)
 {
     angleV = 1.0;

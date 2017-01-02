@@ -3,12 +3,11 @@
 
 //Classe qui definit le menu d'acceuil et qui lance le jeu en fonction du bouton cliqué
 
-#include <QLabel>
 #include <QGridLayout>
 #include <QPaintEvent>
 #include <QStyleOption>
-#include "../head/ButtonWidget.h"
-#include "../head/Jeu.h"
+#include "ButtonWidget.h"
+#include "Jeu.h"
 
 class Menu : public QWidget
 {
@@ -16,6 +15,7 @@ class Menu : public QWidget
 
     public:
         Menu();
+        ~Menu();
 
     public slots:
         void lancerJeu(QString nbJoueurs);

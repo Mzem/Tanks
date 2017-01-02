@@ -4,8 +4,8 @@
 #include <QGraphicsItem>
 #include <QTimer>
 #include <typeinfo>
-#include "../head/Definitions.h"
-#include "../head/Point.h"
+#include "Definitions.h"
+#include "Point.h"
 
 class Obus : public QObject, public QGraphicsPixmapItem
 {
@@ -18,11 +18,15 @@ class Obus : public QObject, public QGraphicsPixmapItem
         void bouger();
 
     private:
-        int type;
         int force;
         int rayon;
+        //Il s'agit des angles absolus en degré
         double angleH;
         double angleV;
+        //Distance de l'impact de l'obus depuis la source (le tank)
+        int distanceImpact;
+        //Compteur indiquant la position actuelle de l'obus par rapport à la distance de l'impact
+        int compteurPosObus;
 
 };
 

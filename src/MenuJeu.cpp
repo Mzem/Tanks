@@ -17,3 +17,7 @@ MenuJeu::MenuJeu(QWidget* fenetre, QWidget *parent) : QWidget(parent)
 QGridLayout* MenuJeu::getLayout(){
     return layout;
 }
+
+MenuJeu::~MenuJeu(){
+    delete layout;
+}

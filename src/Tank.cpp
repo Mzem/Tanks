@@ -6,12 +6,12 @@ const int uniteDeplacement = Y/120;
 Tank::Tank(int num, Terrain* t, QGraphicsItem *parent)
     : QGraphicsPixmapItem(parent), nbObus1(10), nbObus2(3), nbObus3(2)
 {
-    capaciteDeplacement = Y/2;
+    capaciteDeplacement = Y/3;
     resistance = 20;
     numJoueur = num;
     terrain = t;
 
-    //Insertion de l'image du tank et du canon
+    //Insertion de l'image du tank et du canon et positionnement
     QPixmap* imageTank;
     QPixmap* imageCanon;
 
@@ -34,6 +34,26 @@ Tank::Tank(int num, Terrain* t, QGraphicsItem *parent)
             *imageCanon = imageCanon->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
             direction = GAUCHE;
             setPos(Y - Y/120 - (getRayon() - (getRayon()%5))*2, Y/2 - (getRayon() - (getRayon()%5)));
+            break;
+        case 3 :
+            imageTank = new QPixmap(":/tank3.png");
+            imageCanon = new QPixmap(":/canon3.png");
+            *imageTank = imageTank->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setPixmap(*imageTank);
+            *imageCanon = imageCanon->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setRotation(rotation()+90);
+            direction = HAUT;
+            setPos(Y/2 - (getRayon() - (getRayon()%5)),Y - Y/120 - (getRayon() - (getRayon()%5))*2);
+            break;
+        case 4 :
+            imageTank = new QPixmap(":/tank4.png");
+            imageCanon = new QPixmap(":/canon4.png");
+            *imageTank = imageTank->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setPixmap(*imageTank);
+            *imageCanon = imageCanon->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            setRotation(rotation()-90);
+            direction = BAS;
+            setPos(Y/2 - (getRayon() - (getRayon()%5)),Y/120);
             break;
     }
     setTransformOriginPoint(getRayon(),getRayon());
@@ -63,6 +83,7 @@ void Tank::keyPressEvent(QKeyEvent *event)
             canon->setAngleHAbsolu(canon->getAngleHAbsolu()-180);
         }
         else if
+        //Si la case d'arrivée est accessible
         (getPosition().getX()-uniteDeplacement >= 0
         && (
             terrain->getCases((getPosition().getX()-uniteDeplacement)/tailleCase,getPosition().getY()/tailleCase) == VIDE
@@ -90,6 +111,9 @@ void Tank::keyPressEvent(QKeyEvent *event)
         {
             setPos(x()-uniteDeplacement,y());
             capaciteDeplacement--;
+            //Si le tank traverse une crevasse, sa capacité de déplacement est encore diminuée
+            if (traverseCrevasse())
+                capaciteDeplacement--;
             emit capaciteChanged(capaciteDeplacement);
         }
         direction = GAUCHE;
@@ -134,6 +158,8 @@ void Tank::keyPressEvent(QKeyEvent *event)
         {
             setPos(x()+uniteDeplacement,y());
             capaciteDeplacement--;
+            if (traverseCrevasse())
+                capaciteDeplacement--;
             emit capaciteChanged(capaciteDeplacement);
         }
         direction = DROITE;
@@ -178,6 +204,8 @@ void Tank::keyPressEvent(QKeyEvent *event)
         {
             setPos(x(),y()-uniteDeplacement);
             capaciteDeplacement--;
+            if (traverseCrevasse())
+                capaciteDeplacement--;
             emit capaciteChanged(capaciteDeplacement);
         }
         direction = HAUT;
@@ -222,12 +250,14 @@ void Tank::keyPressEvent(QKeyEvent *event)
         {
             setPos(x(),y()+uniteDeplacement);
             capaciteDeplacement--;
+            if (traverseCrevasse())
+                capaciteDeplacement--;
             emit capaciteChanged(capaciteDeplacement);
         }
         direction = BAS;
     }
 
-    //On supprimer le tank courant du terrain puis on insrit sa nouvelle position
+    //On supprime le tank courant du terrain puis on insrit sa nouvelle position
     switch (numJoueur) {
         case 1: terrain->vider(TANK1); terrain->updateCases(getPosition(),TANK1,getRayon()); break;
         case 2: terrain->vider(TANK2); terrain->updateCases(getPosition(),TANK2,getRayon()); break;
@@ -307,8 +337,24 @@ int Tank::getNumJoueur(){
     return numJoueur;
 }
 
-void Tank::adapter(QSize nouvelleTaille, QSize ancienneTaille)
+bool Tank::traverseCrevasse(){
+    //On récupère la liste des items qui entrent en collision avec le tank
+    QList<QGraphicsItem*> elementsTouches = collidingItems();
+
+    //Si le tank touche un objet
+    for (int i = 0, n = elementsTouches.size(); i < n; ++i)
+    {
+        //Si c'est une crevasse
+        if (typeid(*(elementsTouches[i])) == typeid(QGraphicsEllipseItem))
+        {
+            cout << "Crevasse touchee" << endl;
+            return true;
+        }
+    }
+    return false;
+}
+
+Tank::~Tank()
 {
-    setPixmap(pixmap().scaled(nouvelleTaille.width()/7,nouvelleTaille.height()/7, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-    setPos(nouvelleTaille.width()*x()/ancienneTaille.width(),nouvelleTaille.height()*y()/ancienneTaille.height());
+    delete canon;
 }

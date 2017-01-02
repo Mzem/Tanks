@@ -7,7 +7,7 @@
 #include <QPushButton>
 #include <QSignalMapper>
 #include <QVBoxLayout>
-#include "../head/Definitions.h"
+#include "Definitions.h"
 
 class ButtonWidget : public QWidget
 {
@@ -15,12 +15,13 @@ class ButtonWidget : public QWidget
 
     public:
         ButtonWidget(QStringList texts, QColor, QWidget *parent = 0);
+        ~ButtonWidget();
 
     signals:
         void clicked(const QString &text);
 
     private:
-        QSignalMapper *signalMapper;
+        QSignalMapper* signalMapper;
 };
 
 #endif // BUTTONWIDGET_H

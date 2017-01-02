@@ -1,6 +1,6 @@
 #include "../head/Obstacle.h"
 
-Obstacle::Obstacle(ELEMENTS t, Point pos, QGraphicsItem * parent): QGraphicsPixmapItem(parent)
+Obstacle::Obstacle(ELEMENTS t, Point pos, QGraphicsItem* parent): QGraphicsPixmapItem(parent)
 {
     type = t;
     position = pos;
@@ -22,12 +22,6 @@ Obstacle::Obstacle(ELEMENTS t, Point pos, QGraphicsItem * parent): QGraphicsPixm
     case EAU:
         resistance = 100;
         imageObstacle = new QPixmap(":/eau.png");
-        *imageObstacle = imageObstacle->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        setPixmap(*imageObstacle);
-        break;
-    case CREVASSE:
-        resistance = -2;
-        imageObstacle = new QPixmap(":/crevasse.png");
         *imageObstacle = imageObstacle->scaled(Y/8,Y/8, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         setPixmap(*imageObstacle);
         break;

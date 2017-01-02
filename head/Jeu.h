@@ -4,14 +4,13 @@
 //Classe principale qui crée le terrain et y ajoute les elements du jeu
 
 #include <QGraphicsView>
-#include <QResizeEvent>
 #include <QGraphicsProxyWidget>
 #include <QLabel>
 #include <QGroupBox>
 #include <QLCDNumber>
 #include <QMessageBox>
-#include "../head/MenuJeu.h"
-#include "../head/Tank.h"
+#include "MenuJeu.h"
+#include "Tank.h"
 
 class Jeu : public QGraphicsView
 {
@@ -19,26 +18,29 @@ class Jeu : public QGraphicsView
 
     public:
         Jeu(int nombreJoueurs, QWidget* parent=0);
+        ~Jeu();
         Terrain* getTerrain();
         Tank* getTankCourant();
         void setJoueurMort(int);
         bool estMort(int);
-        void resizeEvent(QResizeEvent* event);
 
     public slots:
         void tourDeJeu();
-        void wait();
-        void message();
+        void waitTir();
+        void messageFin();
 
     signals:
-        void fini();
+        void jeuFini();
 
     private:
         int nombreJoueurs;
         vector<int> joueursMorts;
         Terrain* terrain;
-        MenuJeu* menu;
         Tank** tanks;
+        MenuJeu* menu;
+        ButtonWidget* tirObus1;
+        ButtonWidget* tirObus2;
+        ButtonWidget* tirObus3;
 };
 
 #endif // JEU_H

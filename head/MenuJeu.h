@@ -2,7 +2,7 @@
 #define MENUJEU_H
 
 #include <QGridLayout>
-#include "../head/ButtonWidget.h"
+#include "ButtonWidget.h"
 
 class MenuJeu : public QWidget
 {
@@ -10,6 +10,7 @@ class MenuJeu : public QWidget
 
     public:
         MenuJeu(QWidget* fenetre, QWidget *parent=0);
+        ~MenuJeu();
         QGridLayout* getLayout();
 
     private:
