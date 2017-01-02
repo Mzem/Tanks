@@ -13,6 +13,8 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     //Creation du terrain (scene)
     terrain = new Terrain(parent);
     terrain->setSceneRect(0,0,X,Y);
+    
+    if(nombreJoueurs == 1) nbJoueurs++;
 
     //Creation des joueurs (tanks) et ajout au terrain (scene)
     tanks = new Tank*[nbJoueurs];    //Tableau de tank*
@@ -28,6 +30,12 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
             case 3 : terrain->updateCases(tanks[i]->getPosition(),TANK4,tanks[i]->getRayon()); break;
         }
     }
+    
+    if(nombreJoueurs == 1) {
+		nombreJoueurs++;
+		tanks[1]->setIA();
+		cout<<"je suis une IA"<<endl;
+	}
 
     //Ajout des obstacles
     srand(time(NULL));
@@ -65,6 +73,8 @@ void Jeu::tourDeJeu()
 {
     while (estMort(aQuiLeTour+1))
         aQuiLeTour=(aQuiLeTour+1)%nombreJoueurs;
+    
+    if(tanks[aQuiLeTour]->getIA() == 1) cout<<"je suis une IA"<<endl;
 
     //On retire et rajoute le tank pour qu'il s'affiche en dessus des autres elements du terrain
     terrain->removeItem(tanks[aQuiLeTour]);

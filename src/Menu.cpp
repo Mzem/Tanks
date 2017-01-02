@@ -33,9 +33,6 @@ Menu::Menu() : QWidget()
 void Menu::lancerJeu(QString nbJoueurs)
 {
     int nbJr = nbJoueurs[0].digitValue();
-    if (nbJr == 1)
-        J = new Jeu(2,this);
-    else
         J = new Jeu(nbJr,this);
     J->show();
 }

@@ -27,6 +27,8 @@ class Tank : public QObject, public QGraphicsPixmapItem
         int getNbObus3();
         void decrementeResistance(int);
         void keyPressEvent(QKeyEvent* event);
+        void setIA();
+        int getIA();
         //Retourne vrai si le tank traverse actuellement une crevasse
         bool traverseCrevasse();
 
@@ -47,6 +49,7 @@ class Tank : public QObject, public QGraphicsPixmapItem
         int nbObus1;
         int nbObus2;
         int nbObus3;
+        int IA;
 };
 
 #endif // TANK_H
