@@ -2,6 +2,7 @@
 #include "../head/Menu.h"
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 static int aQuiLeTour = 0;
 
@@ -211,10 +212,35 @@ void Jeu::tourDeJeuIA()
         aQuiLeTour=(aQuiLeTour+1)%nombreJoueurs;
     cout<<"je suis une IA"<<endl;
     // ici on fait jouer l'IA 
-    //on commence par la faire bouger
+    //on commence par la faire bouger 
     
+    //j'essaye de l'ajuster avec l'autre tank
+    
+    //si on est en dessous en y
+    while (tanks[aQuiLeTour]->getPosition().getY() > tanks[aQuiLeTour-1]->getPosition().getY()){
+		tanks[aQuiLeTour]->setPos(tanks[aQuiLeTour]->getPosition().getX(),tanks[aQuiLeTour]->getPosition().getY()-uniteDeplacement);
+		//il faut bouger le tank doucement et pas d'un seul coup
+		usleep(1500);}
+	
+    //si on est au dessus en y
+    while (tanks[aQuiLeTour]->getPosition().getY() < tanks[aQuiLeTour-1]->getPosition().getY()){
+		tanks[aQuiLeTour]->setPos(tanks[aQuiLeTour]->getPosition().getX(),tanks[aQuiLeTour]->getPosition().getY()+uniteDeplacement);
+		//il faut bouger le tank doucement et pas d'un seul coup
+		usleep(1500);}
+		
+	//on se met a la bonne distance en x
+    while ((tanks[aQuiLeTour]->getPosition().getX() - tanks[aQuiLeTour-1]->getPosition().getX()) > 350 ){
+		tanks[aQuiLeTour]->setPos(tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement,tanks[aQuiLeTour]->getPosition().getY());
+		//il faut bouger le tank doucement et pas d'un seul coup
+		usleep(1500);}
+		
+    while ((tanks[aQuiLeTour]->getPosition().getX() - tanks[aQuiLeTour-1]->getPosition().getX()) < 350 ){
+		tanks[aQuiLeTour]->setPos(tanks[aQuiLeTour]->getPosition().getX()+uniteDeplacement,tanks[aQuiLeTour]->getPosition().getY());
+		//il faut bouger le tank doucement et pas d'un seul coup
+		usleep(1500);}
+		
     //et la on tire et on passe le tour
-    tanks[aQuiLeTour]->tirer("O2 - TIRER");
+    tanks[aQuiLeTour]->tirer("O1 - TIRER");
     QTimer::singleShot(1500,this,SLOT(tourDeJeu()));
     
     int prochain = (aQuiLeTour+1)%nombreJoueurs;
