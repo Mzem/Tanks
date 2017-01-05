@@ -9,15 +9,17 @@ static int aQuiLeTour = 0;
 Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
 {
     setParent(parent);
+    menu = new MenuJeu(this->parentWidget());
     aQuiLeTour = 0;
 
     //Creation du terrain (scene)
     terrain = new Terrain(parent);
     terrain->setSceneRect(0,0,X,Y);
     
-    //pour creer deux joueurs dont l'IA
-    if(nombreJoueurs == 1) nbJoueurs++;
-
+    //Pour créer un joueur IA
+    if(nombreJoueurs == 1)
+		nbJoueurs++;
+    
     //Creation des joueurs (tanks) et ajout au terrain (scene)
     tanks = new Tank*[nbJoueurs];    //Tableau de tank*
     for (int i = 0 ; i < nbJoueurs ; i++)
@@ -37,7 +39,7 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     //pour dire que le joueur 2 est l'IA
     if(nombreJoueurs == 1) {
 		nombreJoueurs++;
-		tanks[1]->setIA();
+		tanks[1]->setIA(true);
 		cout<<"je suis une IA"<<endl;
 	}
 
@@ -77,8 +79,10 @@ void Jeu::tourDeJeu()
 {
     while (estMort(aQuiLeTour+1))
         aQuiLeTour=(aQuiLeTour+1)%nombreJoueurs;
-
+        
     tanks[aQuiLeTour]->setFocus();
+    
+    delete menu;
 
     //Couleur du menu selon le joueur
     QPalette p;
@@ -209,10 +213,10 @@ void Jeu::waitTir(){
     tirObus2->setDisabled(true);
     tirObus3->setDisabled(true);
     //si le prochain est une IA on appele tourdejeuIA() 
-    if(tanks[aQuiLeTour]->getIA() == 1) 
-    QTimer::singleShot(1500,this,SLOT(tourDeJeuIA()));
+    if(tanks[aQuiLeTour]->getIA() == true) 
+		QTimer::singleShot(1500,this,SLOT(tourDeJeuIA()));
     else
-    QTimer::singleShot(1500,this,SLOT(tourDeJeu()));
+		QTimer::singleShot(1500,this,SLOT(tourDeJeu()));
 }
 void Jeu::messageFin(){
     QMessageBox::information(this,"Fin de la partie",(QString("<html><font color='white'>Le joueur n° </font></html>")+QString::number(aQuiLeTour+1)+QString("<html><font color='white'> a remporté la partie</font></html>")),"QUITTER");
@@ -228,6 +232,7 @@ Tank* Jeu::getTankCourant(){
     return tanks[aQuiLeTour-1];
 }
 void Jeu::setJoueurMort(int numJoueur){
+	cout << "Joueurs n°" << numJoueur << " est mort !" << endl;
     joueursMorts.push_back(numJoueur);
 }
 bool Jeu::estMort(int numJoueur){
@@ -249,7 +254,13 @@ void Jeu::tourDeJeuIA()
 {
 	while (estMort(aQuiLeTour+1))
         aQuiLeTour=(aQuiLeTour+1)%nombreJoueurs;
-    cout<<"je suis une IA"<<endl;
+        
+    if (estMort(2)){
+		emit jeuFini();
+		return;
+	}
+    
+    cout<<"IA joue"<<endl;
     // ici on fait jouer l'IA 
     //on commence par la faire bouger 
     
@@ -342,11 +353,11 @@ void Jeu::tourDeJeuIA()
 	
     //et la on tire et on passe le tour
     if(tanks[aQuiLeTour]->getNbObus3() > 0)
-    tanks[aQuiLeTour]->tirer("O3 - TIRER");
+		tanks[aQuiLeTour]->tirer("O3 - TIRER");
     else if(tanks[aQuiLeTour]->getNbObus2() > 0)
-    tanks[aQuiLeTour]->tirer("O2 - TIRER");    
+		tanks[aQuiLeTour]->tirer("O2 - TIRER");    
     else
-    tanks[aQuiLeTour]->tirer("O1 - TIRER");
+		tanks[aQuiLeTour]->tirer("O1 - TIRER");
     QTimer::singleShot(1500,this,SLOT(tourDeJeu()));
     
     int prochain = (aQuiLeTour+1)%nombreJoueurs;

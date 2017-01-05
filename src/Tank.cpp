@@ -10,7 +10,7 @@ Tank::Tank(int num, Terrain* t, QGraphicsItem *parent)
     resistance = 20;
     numJoueur = num;
     terrain = t;
-    IA=0;
+    IA=false;
 
     //Insertion de l'image du tank et du canon et positionnement
     QPixmap* imageTank;
@@ -301,7 +301,6 @@ void Tank::tirer(QString typeObus){
         case 3: nbObus3--; break;
     }
     Obus* ob = new Obus(type,canon->getAngleHAbsolu(), canon->getAngleVAbsolu());
-    //JE TE LAISSE AJUSTER LE POINT D'ORIGINE DE L'OBUS
     ob->setPos(x()+getRayon()-uniteDeplacement,y()+getRayon()-uniteDeplacement);
     terrain->addItem(ob);
 }
@@ -337,10 +336,10 @@ int Tank::getResistance(){
 int Tank::getNumJoueur(){
     return numJoueur;
 }
-void Tank::setIA(){
-     IA=1;
+void Tank::setIA(bool b){
+     IA=b;
 }
-int Tank::getIA(){
+bool Tank::getIA(){
     return IA;
 }
 
@@ -361,7 +360,6 @@ bool Tank::traverseCrevasse(){
     return false;
 }
 
-Tank::~Tank()
-{
+Tank::~Tank(){
     delete canon;
 }

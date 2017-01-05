@@ -32,8 +32,7 @@ Menu::Menu() : QWidget()
 
 void Menu::lancerJeu(QString nbJoueurs)
 {
-    int nbJr = nbJoueurs[0].digitValue();
-        J = new Jeu(nbJr,this);
+    J = new Jeu(nbJoueurs[0].digitValue(),this);
     J->show();
 }
 
