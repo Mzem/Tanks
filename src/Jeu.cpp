@@ -340,11 +340,11 @@ void Jeu::tourDeJeuIA()
                 tanks[aQuiLeTour]->capaciteDeplacement--;
             emit tanks[aQuiLeTour]->capaciteChanged(tanks[aQuiLeTour]->capaciteDeplacement);
         }
- 
-
-		
 	terrain->vider(TANK2); 
 	terrain->updateCases(tanks[aQuiLeTour]->getPosition(),TANK2,tanks[aQuiLeTour]->getRayon());
+	//si le tank n'est pas dans notre zone et que des obstacles nous bloque on tire dans sa zone 
+	//pour lui deduire des point de capacite quand il va bouger 
+	
     //et la on tire et on passe le tour
     if(tanks[aQuiLeTour]->getNbObus3() > 0)
     tanks[aQuiLeTour]->tirer("O3 - TIRER");
