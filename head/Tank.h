@@ -27,8 +27,13 @@ class Tank : public QObject, public QGraphicsPixmapItem
         int getNbObus3();
         void decrementeResistance(int);
         void keyPressEvent(QKeyEvent* event);
+        void setIA();
+        int getIA();
         //Retourne vrai si le tank traverse actuellement une crevasse
         bool traverseCrevasse();
+        // je vais faire un getter et un setter plus tard
+        int capaciteDeplacement;
+        Terrain* terrain;
 
     public slots:
         void tirer(QString);
@@ -40,13 +45,12 @@ class Tank : public QObject, public QGraphicsPixmapItem
         int numJoueur;
         int resistance;
         //Pointe vers le terrain du jeu pour pouvoir le modifier
-        Terrain* terrain;
         DIRECTION direction;
         Canon* canon;
-        int capaciteDeplacement;
         int nbObus1;
         int nbObus2;
         int nbObus3;
+        int IA;
 };
 
 #endif // TANK_H

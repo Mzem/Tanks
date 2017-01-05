@@ -28,6 +28,7 @@ class Jeu : public QGraphicsView
         void tourDeJeu();
         void waitTir();
         void messageFin();
+        void tourDeJeuIA();
 
     signals:
         void jeuFini();

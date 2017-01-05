@@ -2,6 +2,7 @@
 #include "../head/Menu.h"
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
 
 static int aQuiLeTour = 0;
 
@@ -13,6 +14,9 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
     //Creation du terrain (scene)
     terrain = new Terrain(parent);
     terrain->setSceneRect(0,0,X,Y);
+    
+    //pour creer deux joueurs dont l'IA
+    if(nombreJoueurs == 1) nbJoueurs++;
 
     //Creation des joueurs (tanks) et ajout au terrain (scene)
     tanks = new Tank*[nbJoueurs];    //Tableau de tank*
@@ -29,6 +33,13 @@ Jeu::Jeu(int nbJoueurs, QWidget *parent) : nombreJoueurs(nbJoueurs)
             case 3 : terrain->updateCases(tanks[i]->getPosition(),TANK4,tanks[i]->getRayon()); break;
         }
     }
+    
+    //pour dire que le joueur 2 est l'IA
+    if(nombreJoueurs == 1) {
+		nombreJoueurs++;
+		tanks[1]->setIA();
+		cout<<"je suis une IA"<<endl;
+	}
 
     //Ajout des obstacles
     srand(time(NULL));
@@ -192,10 +203,15 @@ void Jeu::tourDeJeu()
         aQuiLeTour = prochain;
 }
 
+
 void Jeu::waitTir(){
     tirObus1->setDisabled(true);
     tirObus2->setDisabled(true);
     tirObus3->setDisabled(true);
+    //si le prochain est une IA on appele tourdejeuIA() 
+    if(tanks[aQuiLeTour]->getIA() == 1) 
+    QTimer::singleShot(1500,this,SLOT(tourDeJeuIA()));
+    else
     QTimer::singleShot(1500,this,SLOT(tourDeJeu()));
 }
 void Jeu::messageFin(){
@@ -227,4 +243,119 @@ Jeu::~Jeu()
     delete tirObus1;
     delete tirObus2;
     delete tirObus3;
+}
+
+void Jeu::tourDeJeuIA()
+{
+	while (estMort(aQuiLeTour+1))
+        aQuiLeTour=(aQuiLeTour+1)%nombreJoueurs;
+    cout<<"je suis une IA"<<endl;
+    // ici on fait jouer l'IA 
+    //on commence par la faire bouger 
+    
+    //j'essaye de l'ajuster avec l'autre tank
+    
+    //si on est en dessous en y
+    
+    while ((tanks[aQuiLeTour]->getPosition().getY() > tanks[aQuiLeTour-1]->getPosition().getY()) 
+        && (
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()-uniteDeplacement)/tailleCase) == VIDE
+            || 
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()-uniteDeplacement)/tailleCase) == TANK2
+           ) && (
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon())/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()-uniteDeplacement)/tailleCase) == VIDE
+            ||
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon())/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()-uniteDeplacement)/tailleCase) == TANK2
+            )
+        ) 
+        {
+            tanks[aQuiLeTour]->setPos(tanks[aQuiLeTour]->getPosition().getX(),tanks[aQuiLeTour]->getPosition().getY()-uniteDeplacement);
+            tanks[aQuiLeTour]->capaciteDeplacement--;
+            if (tanks[aQuiLeTour]->traverseCrevasse())
+                tanks[aQuiLeTour]->capaciteDeplacement--;
+            emit tanks[aQuiLeTour]->capaciteChanged(tanks[aQuiLeTour]->capaciteDeplacement);
+        }
+    
+    //si on est au dessus en y
+    while ((tanks[aQuiLeTour]->getPosition().getY() < tanks[aQuiLeTour-1]->getPosition().getY()) 
+        && (
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase) == VIDE
+            || 
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase) == TANK2
+           ) && (
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon())/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase) == VIDE
+            ||
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon())/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase) == TANK2
+            )
+        ) 
+        {
+            tanks[aQuiLeTour]->setPos(tanks[aQuiLeTour]->getPosition().getX(),tanks[aQuiLeTour]->getPosition().getY()+uniteDeplacement);
+            tanks[aQuiLeTour]->capaciteDeplacement--;
+            if (tanks[aQuiLeTour]->traverseCrevasse())
+                tanks[aQuiLeTour]->capaciteDeplacement--;
+            emit tanks[aQuiLeTour]->capaciteChanged(tanks[aQuiLeTour]->capaciteDeplacement);
+        }
+
+	//on se met a la bonne distance en x
+	
+    while (((tanks[aQuiLeTour]->getPosition().getX() - tanks[aQuiLeTour-1]->getPosition().getX()) > 350 ) 
+        && (
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) == VIDE
+            || 
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) == TANK2
+           ) && (
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) == VIDE
+            ||
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) == TANK2
+            )
+        ) 
+        {
+            tanks[aQuiLeTour]->setPos(tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement,tanks[aQuiLeTour]->getPosition().getY());
+            tanks[aQuiLeTour]->capaciteDeplacement--;
+            if (tanks[aQuiLeTour]->traverseCrevasse())
+                tanks[aQuiLeTour]->capaciteDeplacement--;
+            emit tanks[aQuiLeTour]->capaciteChanged(tanks[aQuiLeTour]->capaciteDeplacement);
+        }
+        
+    while (((tanks[aQuiLeTour]->getPosition().getX() - tanks[aQuiLeTour-1]->getPosition().getX()) < 350 ) 
+        && (
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) == VIDE
+            || 
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) == TANK2
+           ) && (
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) == VIDE
+            ||
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) == TANK2
+            )
+        ) 
+        {
+            tanks[aQuiLeTour]->setPos(tanks[aQuiLeTour]->getPosition().getX()+uniteDeplacement,tanks[aQuiLeTour]->getPosition().getY());
+            tanks[aQuiLeTour]->capaciteDeplacement--;
+            if (tanks[aQuiLeTour]->traverseCrevasse())
+                tanks[aQuiLeTour]->capaciteDeplacement--;
+            emit tanks[aQuiLeTour]->capaciteChanged(tanks[aQuiLeTour]->capaciteDeplacement);
+        }
+	terrain->vider(TANK2); 
+	terrain->updateCases(tanks[aQuiLeTour]->getPosition(),TANK2,tanks[aQuiLeTour]->getRayon());
+	//si le tank n'est pas dans notre zone et que des obstacles nous bloque on tire dans sa zone 
+	//pour lui deduire des point de capacite quand il va bouger 
+	
+    //et la on tire et on passe le tour
+    if(tanks[aQuiLeTour]->getNbObus3() > 0)
+    tanks[aQuiLeTour]->tirer("O3 - TIRER");
+    else if(tanks[aQuiLeTour]->getNbObus2() > 0)
+    tanks[aQuiLeTour]->tirer("O2 - TIRER");    
+    else
+    tanks[aQuiLeTour]->tirer("O1 - TIRER");
+    QTimer::singleShot(1500,this,SLOT(tourDeJeu()));
+    
+    int prochain = (aQuiLeTour+1)%nombreJoueurs;
+
+    while (estMort(prochain+1))     //le num de joueur est augmenté de 1 (tour 0 pour le joueur 1)
+        prochain = (prochain+1)%nombreJoueurs;
+
+    if (prochain == aQuiLeTour)
+        emit jeuFini();
+    else
+        aQuiLeTour = prochain;
 }

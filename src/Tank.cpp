@@ -10,6 +10,7 @@ Tank::Tank(int num, Terrain* t, QGraphicsItem *parent)
     resistance = 20;
     numJoueur = num;
     terrain = t;
+    IA=0;
 
     //Insertion de l'image du tank et du canon et positionnement
     QPixmap* imageTank;
@@ -335,6 +336,12 @@ int Tank::getResistance(){
 }
 int Tank::getNumJoueur(){
     return numJoueur;
+}
+void Tank::setIA(){
+     IA=1;
+}
+int Tank::getIA(){
+    return IA;
 }
 
 bool Tank::traverseCrevasse(){
