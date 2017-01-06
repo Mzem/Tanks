@@ -15,4 +15,4 @@ SOURCES += testtank.cpp \
 # Output
 DESTDIR = ../bin
 OBJECTS_DIR = ../bin
-MOC_DIR = .
+MOC_DIR = ../bin
