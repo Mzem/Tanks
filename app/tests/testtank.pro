@@ -8,11 +8,11 @@ INCLUDEPATH += .
 
 # Input
 SOURCES += testtank.cpp \
-	../src/Point.cpp \
-	../src/Canon.cpp \
-	../src/Obstacle.cpp 
+	../main/src/Point.cpp \
+	../main/src/Canon.cpp \
+	../main/src/Obstacle.cpp 
 
 # Output
-DESTDIR = ../bin
-OBJECTS_DIR = ../bin
-MOC_DIR = ../bin
+DESTDIR = bin
+OBJECTS_DIR = bin
+MOC_DIR = bin

@@ -1,7 +1,7 @@
 #include <QtTest/QtTest>
-#include "../head/Point.h"
-#include "../head/Canon.h"
-#include "../head/Obstacle.h"
+#include "../main/head/Point.h"
+#include "../main/head/Canon.h"
+#include "../main/head/Obstacle.h"
 
 class TestTank: public QObject
 {

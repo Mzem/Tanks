@@ -7,7 +7,7 @@ DESTDIR = bin		#Destination du fichier TARGET "Tanks"
 OBJECTS_DIR = bin	#Destination des fichiers objet
 RCC_DIR = bin		#Destination des fichiers qrc
 MOC_DIR = bin
-UI_DIR = BIN
+UI_DIR = bin
 
 
 SOURCES += \
@@ -21,7 +21,7 @@ SOURCES += \
     src/Tank.cpp \
     src/Canon.cpp \
     src/Obus.cpp \
-    src/Obstacle.cpp \
+    src/Obstacle.cpp
 
 
 HEADERS += \
@@ -35,7 +35,7 @@ HEADERS += \
     head/Tank.h \
     head/Canon.h \
     head/Obus.h \
-    head/Obstacle.h \
+    head/Obstacle.h
 
 
 RESOURCES += \
