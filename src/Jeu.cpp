@@ -308,16 +308,20 @@ void Jeu::tourDeJeuIA()
         }
 
 	//on se met a la bonne distance en x
-	
+
     while (((tanks[aQuiLeTour]->getPosition().getX() - tanks[aQuiLeTour-1]->getPosition().getX()) > 350 ) 
         && (
-            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) == VIDE
-            || 
-            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) == TANK2
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) != ARBRE
+            && 
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) != ROCHER
+           && 
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) != EAU
            ) && (
-            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) == VIDE
-            ||
-            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) == TANK2
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) != ARBRE
+            &&
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) != ROCHER
+            &&
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()-uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) != EAU
             )
         ) 
         {
@@ -330,13 +334,17 @@ void Jeu::tourDeJeuIA()
         
     while (((tanks[aQuiLeTour]->getPosition().getX() - tanks[aQuiLeTour-1]->getPosition().getX()) < 350 ) 
         && (
-            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) == VIDE
-            || 
-            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) == TANK2
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) != ARBRE
+            && 
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) != ROCHER
+            && 
+            terrain->getCases(tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement/tailleCase,(tanks[aQuiLeTour]->getPosition().getY())/tailleCase) != EAU
            ) && (
-            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) == VIDE
-            ||
-            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) == TANK2
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) != ARBRE
+            &&
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) != ROCHER
+            &&
+            terrain->getCases((tanks[aQuiLeTour]->getPosition().getX()+2*tanks[aQuiLeTour]->getRayon()+uniteDeplacement)/tailleCase,(tanks[aQuiLeTour]->getPosition().getY()+2*tanks[aQuiLeTour]->getRayon())/tailleCase) != EAU
             )
         ) 
         {
@@ -350,7 +358,15 @@ void Jeu::tourDeJeuIA()
 	terrain->updateCases(tanks[aQuiLeTour]->getPosition(),TANK2,tanks[aQuiLeTour]->getRayon());
 	//si le tank n'est pas dans notre zone et que des obstacles nous bloque on tire dans sa zone 
 	//pour lui deduire des point de capacite quand il va bouger 
-	
+	if ((tanks[aQuiLeTour]->getPosition().getX() - tanks[aQuiLeTour-1]->getPosition().getX()) != 350 )
+		while (tanks[aQuiLeTour]->getCanon()->getAngleVAbsolu() <= 70){
+        tanks[aQuiLeTour]->getCanon()->setAngleV(tanks[aQuiLeTour]->getCanon()->getAngleV()+0.1);
+        tanks[aQuiLeTour]->getCanon()->setAngleVAbsolu(tanks[aQuiLeTour]->getCanon()->getAngleVAbsolu()+10);
+    }
+    else{
+		tanks[aQuiLeTour]->getCanon()->setAngleV(1);
+        tanks[aQuiLeTour]->getCanon()->setAngleVAbsolu(10);
+		} 
     //et la on tire et on passe le tour
     if(tanks[aQuiLeTour]->getNbObus3() > 0)
 		tanks[aQuiLeTour]->tirer("O3 - TIRER");
