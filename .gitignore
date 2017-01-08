@@ -1,5 +1,7 @@
 *.o
+*.moc
 bin/*.cpp
 Makefile
 Tanks
+tests
 Tanks.pro.user
