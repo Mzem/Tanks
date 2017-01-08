@@ -1,0 +1,159 @@
+\documentclass[a4,11pt]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{color,titlesec,listingsutf8,lstautodedent}
+\usepackage[top=3cm, bottom=3cm, right=2.2cm, left=2.2cm]{geometry}
+\renewcommand{\rmdefault}{lmss}
+\renewcommand{\ttdefault}{pcr}
+\titleformat*{\section}{\huge\bfseries}
+\titleformat*{\subsection}{\LARGE\bfseries}
+\titleformat*{\subsubsection}{\large\bfseries}
+\titlespacing*{\section} {0cm}{10ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{mygreen},
+  extendedchars=true,
+  frame=single,	                
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  language=C++,
+  rulecolor=\color{black},
+  showspaces=false,
+  showstringspaces=false,
+  stringstyle=\color{mymauve},
+  tabsize=2,
+  title=\lstname,
+  autodedent=true,
+  morekeywords={QOBJECT,connect,SIGNAL,SLOT,Qt},
+  sensitive=false,
+  inputencoding=utf8/latin1,
+  %gestion des caractères latins
+  literate=
+  {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\EUR}}1 {£}{{\pounds}}1
+}
+
+\author{Younes Ben Yamna - Malek Zemni}
+\title{\huge\textbf{Rapport - Projet langages avancés : Jeu de tanks}}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+	Ce jeu de tanks est basé sur le principe de la programmation orientée objet. Il est écrit dans le langage C++ et utilise la bibliothèque Qt pour la gestion des fonctionnalités graphiques ainsi que la gestion des tests unitaires.
+	\subsection{Installation du jeu :}
+	Se positionner sur le répertoire du projet \lstinline!Tanks! puis :
+	\begin{description}
+		\item{\textbf{Compilation du jeu :}} taper la commande \lstinline!make!.
+		\item{\textbf{Lancement du jeu :}} taper la commande \lstinline!make run!.
+	\end{description}	
+	\subsection{Installation des tests :}
+	Se positionner sur le répertoire de tests \lstinline!Tanks/tests! puis :
+	\begin{description}
+		\item{\textbf{Compilation des tests :}} taper la commande \lstinline!make!.
+		\item{\textbf{Lancement des tests :}} taper la commande \lstinline!make run!.
+	\end{description}
+	
+\section{Explication du jeu}
+	\subsection{Déroulement du jeu}
+	Lors du lancement du jeu, un menu principal s'affiche. Il est alors possible de choisir un jeu à 2, 3 ou 4 joueurs (humain contre humain) ou un jeu à 1 joueur (humain contre IA).
+		Dans un jeu d'humain contre humain, chaque joueur doit attendre son tour pour pouvoir jour. Le joueur n°1 est positionné à gauche, le joueur n°2 à droite, le joueur n°3 en bas et le joueur n°4 en haut de l'écran.\\
+		Dans un jeu d'humain contre une IA, l'humain est positionné à gauche de l'écran et l'IA à droite.\\
+		Le menu du jeu (à droite de la fenêtre) affiche le numéro du joueur qui joue actuellement ainsi que des informations sur ce dernier. Ces informations sont :
+		\begin{itemize}
+			\item La capacité de déplacement du tank
+			\item La résistance du tank (le points de vie)
+			\item Les informations de chacun des 3 obus : la force, le rayon et le nombre d'obus restants
+		\end{itemize}
+		Le menu du jeu permet aussi de tirer un obus et de revenir au menu principal (quitter).
+		\paragraph{\textbf{Tour de jeu :}} à chaque tour de jeu, le joueur (tank) peut se déplacer (tant qu'il lui reste des points de capacité), positionner son canon verticalement et horizontalement et enfin tirer (s'il lui reste des obus). Une fois que le joueur tire un obus (bouton du menu), le jeu passe au tour du joueur suivant.
+		\paragraph{\textbf{Angle de tir :}} la direction de tir de l'obus est la même que la direction du canon (position horizontale du canon). La portée du tir quant à elle dépend de le position verticale du canon : celle-ci suit une direction parabolique, c'est à dire que la portée de tir est maximale pour un angle du canon compris entre 30° et 40°.
+		\paragraph{\textbf{Destruction d'un élément (tank ou obstacle) :}} un élément est touché par un obus si l'impact de ce dernier (rayon de l'obus) touche l'élément. Il lui enlève des points de sa résistance. L'élément est détruit si sa résistance est inférieure ou égale à 0.
+		\paragraph{\textbf{Fin du jeu :}} le jeu se termine s'il ne reste qu'un seul tank dans le terrain (tous les autres sont détruits).
+	
+	\subsection{Commandes du jeu}
+		\begin{itemize}
+			\item \textbf{Déplacement du tank :} flèches du clavier
+			\item \textbf{Positionnement du canon :} touches Q et D pour l'angle horizontal et Z et S pour l'angle vertical
+			\item \textbf{Tir :} bouton du menu du jeu
+		\end{itemize}
+
+\section{Explication du code}
+	\subsection{Le fichier principal}
+	Le fichier principal qui contient la fonction \lstinline!main()! se contente de créer un objet \lstinline!Menu! et de l'afficher. C'est cet objet \lstinline!Menu! qui va ensuite lancer le jeu en appelant le slot \lstinline!lancerJeu()! en fonction du nombre de joueurs choisi.
+	
+	\subsection{La classe \lstinline!Menu!}
+	La classe menu affiche plusieurs boutons qui sont gérés par la classe \lstinline!ButtonWidget!. Cette classe permet de passer le texte du bouton en paramètre.
+	\lstinputlisting[firstline=28,lastline=29,title=Menu.cpp]{../src/Menu.cpp}
+	Le slot \lstinline!lancerJeu()! pourra ensuite créer l'objet \lstinline!Jeu! en fonction du texte (passé en paramètre au slot) du bouton cliqué.
+	\lstinputlisting[firstline=33,lastline=37,title=Menu.cpp]{../src/Menu.cpp}
+	
+	\subsection{La classe \lstinline!Jeu!}
+	La classe \lstinline!Jeu! est la classe fondamentale qui va afficher les éléments du jeu puis gérer les événements. 
+		
+		\subsubsection{Affichage des éléments}
+		Le constructeur de la classe \lstinline!Jeu! va créer un terrain (classe \lstinline!Terrain!) et y rajouter les éléments du jeu (tanks et obstacles).
+		La classe \lstinline!Jeu! est un {\color{red}\lstinline!QGraphicsView!} qui va afficher le terrain (qui est un {\color{red}\lstinline!QGraphicsScene!}). C'est donc le \lstinline!Terrain! qui contient les éléments (tanks et obstacle) et c'est le \lstinline!Jeu! qui les affiche.\\
+		
+		\subsubsection{Gestion des événements}
+		La classe \lstinline!Jeu! contient un slot \lstinline!tourDeJeu()! qui va être appelé à chaque nouveau tour. Le slot ou la méthode \lstinline!tourDeJeu()! commence par afficher le menu correspondant au joueur courant et les boutons des obus. On voit ici le principe de la \textbf{programmation événementielle} : on n'attend pas que le tank finisse son positionnement pour qu'il puisse tirer, il peut se déplacer et positionner son canon jusqu'à ce qu'un événement se produise : un clic sur un bouton de tir d'obus. Exemple pour l'obus 1 :
+		\lstinputlisting[firstline=146,lastline=151,title=Jeu.cpp]{../src/Jeu.cpp}
+		Vers la fin, le slot \lstinline!tourDeJeu()! va mettre à jour la variable globale \lstinline!aQuiLeTour! tout en prenant compte les joueurs morts. Si tous les joueurs sont morts, le jeu sera terminé et un message de fin apparaîtra.
+		\lstinputlisting[firstline=198,lastline=207,title=Jeu.cpp]{../src/Jeu.cpp}
+		
+		\subsubsection{Tour de jeu de l'IA}
+		Il existe aussi dans la classe \lstinline!Jeu! une méthode \lstinline!tourDeJeuIA()! similaire à \lstinline!tourDeJeu()! qui simule le comportement d'un joueur (intélligence artificielle). Ici il n'y a pas d'affichage de menu, mais simplement un cas particulier de la méthode \lstinline!keyPressedEvent()! de la classe \lstinline!Tank! (qui gère les événements liés au tank et son canon).
+		
+	\subsection{La classe \lstinline!Tank!}
+	La classe \lstinline!Tank! permet de construire un tank et gérer les événements liés à son déplacement et le positionnement de son canon et aussi au tir.
+	
+		\subsubsection{Construction}
+		Un tank est une image {\color{red}\lstinline!QGraphicsPixmapItem!} qui est aussi un élément d'un {\color{red}\lstinline!QGraphicsScene!}, c'est à dire le terrain. Il en est de même pour le canon (et les obstacles aussi). Le constructeur de cette classe va donc créer le tank et le canon (qui héritera du tank pour avoir un déplacement homologue).
+		
+		\subsubsection{Gestion des événements du clavier}
+		La classe \lstinline!Jeu! contient une méthode \lstinline!keyPressedEvent()! qui va gérer les événement liés aux touches du clavier (touches pour le déplacement du tank et le positionnement du canon). Si une touche de déplacement est appuyée, des tests seront effectués pour vérifier si le déplacement souhaité est possible puis déplace le tank (et met à jour les propriétés du tank et les cases du terrain), sinon rien ne se passe. Exemple pour la touche flèche gauche :
+		\lstinputlisting[firstline=73,lastline=121,title=Tank.cpp]{../src/Tank.cpp}
+		Le déplacement du canon est quant à lui sans conditions. On se contente juste de mettre à jour les angles de ce dernier pour qu'ils puissent guider la trajectoire du tir (l'obus).
+		
+		\subsubsection{La méthode \lstinline!tirer()!}
+		Cette méthode (ou slot) est appelée lors de l'appui sur un bouton de tir du menu de jeu. Elle crée un objet \lstinline!Obus! et l'ajoute au terrain.
+		\lstinputlisting[firstline=296,lastline=306,title=Tank.cpp]{../src/Tank.cpp}
+		
+	
+	\subsection{La classe \lstinline!Obus!}
+	La classe \lstinline!Obus! permet de construire un obus (à la position et à la direction passés en paramètre) et gérer les événements liés à son mouvement et son impact.
+	
+		\subsubsection{Construction}
+		Lors de l'appel à la méthode \lstinline!tirer()! de la classe \lstinline!Tank!, un obus va être crée. Celui-ci va prendre une position initiale qui ne dépend que de la position horizontale du canon du tank. Il s'agit de l'attribut \lstinline!angleH!. Cet attribut va ensuit guider la trajectoire de déplacement du tank grâce aux fonctions trigonométriques.
+		\lstinputlisting[firstline=96,lastline=97,title=Obus.cpp]{../src/Obus.cpp}
+		La classe \lstinline!Obus! a aussi un attribut \lstinline!angleV! qui permet de calculer la position de l'impact de l'obus grâce à une équation parabolique.
+		\lstinputlisting[firstline=30,lastline=30,title=Obus.cpp]{../src/Obus.cpp}
+		
+		\subsubsection{Mouvement}
+		Le mouvement de l'obus va être géré dans la méthode \lstinline!bouger()! qui sera appelée toutes les 10 millisecondes.
+		\lstinputlisting[firstline=35,lastline=37,title=Obus.cpp]{../src/Obus.cpp}
+		À chaque appel à la méthode \lstinline!bouger()!, on va incrémenter le compteur de déplacement \lstinline!compteurPosObus! jusqu'à ce qu'il atteigne une valeur correspondant à la distance de l'impact \lstinline!distanceImpact!. Dans ce cas, on fait exploser l'obus et on regarde les éléments qui sont touchés par l'impact de l'obus (rayon de l'obus) puis on effectue les actions adéquates : si l'impact touche un tank ou un obstacle, on va réduire leur résistance, si le tank ou l'obstacle touché n'a plus de résistance, on le détruit.
+		\lstinputlisting[firstline=56,lastline=87,title=Obus.cpp]{../src/Obus.cpp}
+
+\section{Conclusion}
+	Ce jeu écrit en C++ a permis de mettre en {\oe}uvre plusieurs notions liées à la programmation orientée objet. La bibliothèque Qt sur laquelle il est basé a été non seulement une concrétisation des vertus de la programmation objet mais aussi un lien entre ce principe de programmation et la programmation événementielle.
+		
+		
+\end{document}

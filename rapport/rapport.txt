@@ -1,3 +1,0 @@
-Remarques à inclue dans le rapport :
-
-- Les tanks sont positionnés aléatoirement sur leur coté (gauche pour le 1er joueur, droit pour le 2ème, bas pour le 3ème et haut pour le 4ème) et à la bonne direction.
